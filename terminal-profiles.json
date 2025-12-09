@@ -1,0 +1,46 @@
+{
+  "profiles": {
+    "Backend": {
+      "name": "Backend (FastAPI)",
+      "command": "powershell",
+      "args": ["-File", "start.ps1", "-BackendOnly"],
+      "cwd": "${workspaceFolder}",
+      "icon": "server"
+    },
+    "Frontend": {
+      "name": "Frontend (Next.js)",
+      "command": "powershell",
+      "args": ["-File", "start.ps1", "-FrontendOnly"],
+      "cwd": "${workspaceFolder}",
+      "icon": "browser"
+    },
+    "All Services": {
+      "name": "All Services",
+      "command": "powershell",
+      "args": ["-File", "start.ps1"],
+      "cwd": "${workspaceFolder}",
+      "icon": "rocket"
+    },
+    "Secrets": {
+      "name": "Secrets Manager",
+      "command": "powershell",
+      "args": ["-File", "secrets.ps1", "-Action", "list"],
+      "cwd": "${workspaceFolder}",
+      "icon": "key"
+    },
+    "GitHub": {
+      "name": "GitHub Setup",
+      "command": "powershell",
+      "args": ["-File", "verify-github-setup.ps1"],
+      "cwd": "${workspaceFolder}",
+      "icon": "github"
+    },
+    "Cloud Agents": {
+      "name": "Cloud Agents",
+      "command": "powershell",
+      "args": ["-File", "cloud-agents-quick-start.ps1"],
+      "cwd": "${workspaceFolder}",
+      "icon": "cloud"
+    }
+  }
+}
