@@ -1,40 +1,86 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 # AI PROGRAM VIDEO AND MUSIC OVERLAY - CURSOR AI RULES
+# Unified AI-Powered Video Creation Platform
 # ═══════════════════════════════════════════════════════════════════════════════
-# These rules govern AI behavior for video/music overlay processing and editing
+# These rules govern AI behavior for the complete video creation and processing system
 # ═══════════════════════════════════════════════════════════════════════════════
 
 ## SYSTEM IDENTITY
 
-You are assisting with an AI-powered video and music overlay program. This system processes
-video files, adds music overlays, and performs various media editing operations.
+You are assisting with a **Unified AI-Powered Video Creation Platform** that combines:
+1. **Video & Music Overlay Processing** - Add music to videos with advanced editing
+2. **AI Video Generation** - 10x Specialist AI Agents for automated video creation
+3. **Social Media Integration** - Automatic publishing to multiple platforms
+4. **Workflow Engine** - Sequential, parallel, and hybrid processing modes
 
 **QUALITY AND PERFORMANCE ARE PARAMOUNT.**
 
 ## 🎬 PROJECT CONTEXT
 
-This is a media processing application that:
+This is a comprehensive media processing and AI generation system that:
 - Processes video files (various formats: MP4, AVI, MOV, etc.)
 - Adds music/audio overlays to videos
-- Handles video editing, effects, and transformations
-- Manages media file I/O and storage
-- Provides user interface for media operations
+- Generates videos using AI agents (text-to-video, image-to-video)
+- Creates music tracks with AI
+- Generates images and overlays
+- Handles voice synthesis and transcription
+- Provides FastAPI backend with REST endpoints
+- Includes Next.js dashboard for UI
+- Integrates with social media platforms (Twitter, YouTube, TikTok, Instagram)
+- Manages database operations (Supabase)
+- Handles payments (Stripe)
 
 ## 📁 PROJECT STRUCTURE
 
 ```
 ai-program-video-music-overlay/
-├── src/                    # Source code
-│   ├── video/              # Video processing modules
-│   ├── audio/              # Audio/music processing
-│   ├── overlay/            # Overlay rendering
-│   ├── effects/            # Video effects
-│   └── utils/              # Utilities
-├── config/                 # Configuration files
-├── assets/                 # Media assets (videos, music)
-├── output/                 # Processed output files
-├── tests/                  # Test suite
-└── docs/                   # Documentation
+├── app/                      # FastAPI Backend
+│   ├── agents/               # 10x Specialist AI Agents
+│   │   ├── video_agent.py    # Video generation
+│   │   ├── music_agent.py    # Music generation
+│   │   ├── image_agent.py    # Image generation
+│   │   ├── voice_agent.py    # Voice/TTS
+│   │   ├── content_agent.py  # Content analysis
+│   │   ├── editing_agent.py  # Video editing
+│   │   ├── optimization_agent.py  # Platform optimization
+│   │   ├── analytics_agent.py     # Performance analytics
+│   │   ├── safety_agent.py        # Content moderation
+│   │   └── social_agent.py         # Social media
+│   ├── providers/            # AI Provider Clients
+│   │   ├── together_client.py
+│   │   ├── huggingface_client.py
+│   │   └── flux_client.py
+│   ├── workflows/            # Workflow Engine
+│   │   └── engine.py
+│   ├── social/               # Social Media Integrations
+│   │   ├── twitter_client.py
+│   │   ├── youtube_client.py
+│   │   ├── tiktok_client.py
+│   │   └── instagram_client.py
+│   ├── database/             # Database layer
+│   ├── payments/             # Stripe integration
+│   ├── ui/                   # Gradio interface
+│   └── main.py               # FastAPI app
+├── dashboard/                # Next.js Frontend
+│   ├── app/                  # Next.js app directory
+│   │   ├── page.tsx         # Main dashboard
+│   │   ├── agents/          # Agents page
+│   │   ├── create/          # Video creation
+│   │   ├── gallery/         # Video gallery
+│   │   └── social/          # Social media
+│   ├── components/           # React components
+│   └── lib/                  # Utilities
+├── src/                      # Video/Music Processing (if separate)
+│   ├── video/               # Video processing
+│   ├── audio/               # Audio processing
+│   ├── overlay/             # Overlay rendering
+│   └── effects/             # Video effects
+├── config/                   # Configuration files
+├── assets/                  # Media assets
+├── output/                  # Processed output
+├── generated/               # AI-generated content
+├── tests/                   # Test suite
+└── docs/                    # Documentation
 ```
 
 ## 🏗️ ARCHITECTURE PATTERNS
@@ -46,19 +92,34 @@ ai-program-video-music-overlay/
 4. **Output Layer** - Encoding, format conversion, file writing
 5. **UI Layer** - User interface, preview, controls
 
+### AI Agent Workflow
+1. **Content Analysis** - Script generation, SEO optimization (Content Agent)
+2. **Media Generation** - Video, music, images, voice (Video, Music, Image, Voice Agents)
+3. **Editing & Composition** - Assembly and effects (Editing Agent)
+4. **Optimization** - Platform-specific encoding (Optimization Agent)
+5. **Safety & Analytics** - Content moderation and performance prediction (Safety, Analytics Agents)
+6. **Social Publishing** - Multi-platform distribution (Social Agent)
+
+### Workflow Modes
+- **Sequential**: Best quality, step-by-step processing
+- **Parallel**: Fastest, concurrent generation
+- **Hybrid**: Balanced approach (recommended)
+
 ### Code Style
-- Python 3.10+ with type hints (if Python-based)
-- TypeScript/JavaScript with strict types (if web-based)
+- Python 3.10+ with type hints
+- TypeScript/JavaScript with strict types
 - Async/await for I/O operations
 - 100 character line limit
 - Clear function names and documentation
+- FastAPI for backend APIs
+- Next.js 14+ for frontend
 
 ## 🎵 MEDIA FILE HANDLING
 
 ### Supported Formats
-- **Video**: MP4, AVI, MOV, MKV, WebM
-- **Audio**: MP3, WAV, AAC, OGG, FLAC
-- **Images**: PNG, JPG, GIF (for overlays)
+- **Video**: MP4, AVI, MOV, MKV, WebM, FLV, WMV
+- **Audio**: MP3, WAV, AAC, OGG, FLAC, M4A, WMA
+- **Images**: PNG, JPG, GIF, BMP, TIFF, WebP
 
 ### File Management
 - Always validate file formats before processing
@@ -66,6 +127,29 @@ ai-program-video-music-overlay/
 - Use temporary directories for processing
 - Clean up temporary files after operations
 - Handle large files with streaming when possible
+- Store generated files in `generated/` directory
+- Store processed files in `output/` directory
+
+## 🤖 AI AGENTS
+
+### 10x Specialist Agents
+
+1. **Video Agent** - Text-to-video, image animation (HuggingFace: SVD, AnimateDiff, CogVideo)
+2. **Music Agent** - AI soundtrack creation (HuggingFace: MusicGen, Riffusion)
+3. **Image Agent** - Overlays, thumbnails (FLUX Pro, SDXL)
+4. **Voice Agent** - TTS, transcription, captions (Whisper, Bark)
+5. **Content Agent** - Script, SEO, hashtags (Together.ai: Llama, DeepSeek)
+6. **Editing Agent** - Composition, effects (FFmpeg, MoviePy)
+7. **Optimization Agent** - Platform encoding (FFmpeg)
+8. **Analytics Agent** - Performance prediction (Claude, GPT-4o)
+9. **Safety Agent** - Content moderation (Content filters)
+10. **Social Agent** - Upload, scheduling (Twitter, YouTube, Telegram APIs)
+
+### Agent Communication
+- Agents communicate through the orchestrator
+- Use async/await for agent operations
+- Log all agent actions for debugging
+- Handle agent failures gracefully
 
 ## 🚨 CRITICAL RULES
 
@@ -74,30 +158,44 @@ ai-program-video-music-overlay/
 - Use streaming/chunking for large files
 - Always close file handles after use
 - Monitor memory usage during processing
+- Clear generated files after processing when possible
 
 ### Rule 2: FILE VALIDATION
 - Always validate file existence before processing
 - Check file formats and codecs
 - Verify file integrity
 - Handle corrupted files gracefully
+- Validate API responses before processing
 
 ### Rule 3: ERROR HANDLING
 - Media processing can fail for many reasons
 - Always wrap operations in try/except blocks
 - Provide clear error messages to users
 - Log errors for debugging
+- Handle API rate limits gracefully
+- Implement retry logic for network operations
 
 ### Rule 4: PERFORMANCE
 - Video processing is CPU/GPU intensive
 - Use appropriate libraries (FFmpeg, OpenCV, etc.)
 - Consider async processing for long operations
 - Show progress indicators for user feedback
+- Use parallel processing for independent operations
+- Cache results when appropriate
 
 ### Rule 5: OUTPUT QUALITY
 - Maintain video quality settings
 - Preserve aspect ratios
 - Handle audio/video sync correctly
 - Test output on different players/devices
+- Optimize for target platform (TikTok, Instagram, YouTube)
+
+### Rule 6: API INTEGRATIONS
+- Never hardcode API keys
+- Use environment variables for credentials
+- Handle API rate limits
+- Implement proper error handling for API calls
+- Log API usage for monitoring
 
 ## 🧪 TESTING REQUIREMENTS
 
@@ -106,10 +204,13 @@ ai-program-video-music-overlay/
 3. **Format Tests**: Test various input formats
 4. **Performance Tests**: Monitor processing times
 5. **Quality Tests**: Verify output quality
+6. **API Tests**: Test all FastAPI endpoints
+7. **Agent Tests**: Test each AI agent independently
+8. **Workflow Tests**: Test complete workflows
 
 ## 📝 COMMENT TAGS
 
-Use these special comment tags for media-critical code:
+Use these special comment tags for code organization:
 
 ```python
 # MEDIA: Code that processes video/audio files
@@ -118,6 +219,11 @@ Use these special comment tags for media-critical code:
 # ENCODE: Code that handles encoding/decoding
 # MEMORY: Code that manages memory for large files
 # QUALITY: Code that affects output quality
+# AGENT: Code related to AI agents
+# API: Code for API endpoints
+# SOCIAL: Code for social media integration
+# WORKFLOW: Code for workflow engine
+# DATABASE: Code for database operations
 ```
 
 ## 🚫 FORBIDDEN PATTERNS
@@ -131,26 +237,33 @@ NEVER generate code that:
 6. Overwrites source files without backup
 7. Uses blocking operations in UI thread
 8. Skips error handling
+9. Hardcodes API keys or secrets
+10. Makes API calls without rate limiting
+11. Processes media without quality checks
+12. Skips content moderation
 
 ## ✅ REQUIRED PATTERNS
 
-ALWAYS include in media processing code:
+ALWAYS include in code:
 1. Try/except with proper error handling
 2. File validation before processing
 3. Progress callbacks for long operations
 4. Resource cleanup (close files, release memory)
 5. Logging with appropriate levels
 6. Type hints on function signatures
-7. Docstrings explaining processing logic
+7. Docstrings explaining logic
 8. Configuration for quality settings
+9. API rate limiting where needed
+10. Content safety checks for generated content
 
 ## 🔧 DEVELOPMENT WORKFLOW
 
 1. **Before Changes**: Read existing implementation
 2. **Testing**: Run tests with sample media files
-3. **Linting**: Use appropriate linter for language
-4. **Commit**: Clear message with type prefix (feat/fix/refactor)
-5. **Deploy**: Test on target platform before release
+3. **Linting**: Use `ruff check .` and `ruff format .` for Python
+4. **Type Checking**: Use `mypy` for Python, TypeScript compiler for TS
+5. **Commit**: Clear message with type prefix (feat/fix/refactor)
+6. **Deploy**: Test on target platform before release
 
 ## 💾 STORAGE CONSIDERATIONS
 
@@ -159,6 +272,8 @@ ALWAYS include in media processing code:
 - Consider cloud storage for large files
 - Implement cleanup of old/temporary files
 - Monitor disk space usage
+- Store generated content in `generated/` directory
+- Store processed output in `output/` directory
 
 ## 🎨 UI/UX GUIDELINES
 
@@ -168,19 +283,67 @@ ALWAYS include in media processing code:
 - Display file information (duration, size, format)
 - Handle drag-and-drop file input
 - Show clear error messages
+- Provide real-time status updates
+- Use loading states appropriately
 
-## 📚 KEY LIBRARIES TO CONSIDER
+## 📚 KEY LIBRARIES
 
+### Backend (Python)
 - **FFmpeg**: Video/audio processing
 - **OpenCV**: Video manipulation and effects
 - **Pillow**: Image processing
 - **MoviePy**: Python video editing
 - **librosa**: Audio analysis
-- **numpy**: Numerical operations on media data
+- **numpy**: Numerical operations
+- **FastAPI**: Backend framework
+- **Pydantic**: Data validation
+- **SQLAlchemy**: Database ORM
+
+### Frontend (TypeScript/React)
+- **Next.js**: React framework
+- **TypeScript**: Type safety
+- **Tailwind CSS**: Styling
+- **React Query**: Data fetching
+
+### AI Providers
+- **Together.ai**: LLM inference (DeepSeek, Llama, Qwen)
+- **HuggingFace**: AI models (SVD, MusicGen, Whisper, Bark)
+- **FLUX**: Image generation
+- **OpenAI**: GPT-4o
+- **Anthropic**: Claude
+
+## 🌐 SOCIAL MEDIA PLATFORMS
+
+### Supported Platforms
+- **TikTok**: 9:16, 1080x1920
+- **Instagram Reels**: 9:16, 1080x1920
+- **YouTube Shorts**: 9:16, up to 4K
+- **Twitter/X**: 16:9, 1280x720
+
+### Platform-Specific Requirements
+- Optimize video format for each platform
+- Use appropriate aspect ratios
+- Follow platform content guidelines
+- Handle platform-specific API requirements
+
+## 🔐 SECURITY
+
+- Never commit API keys or secrets
+- Use environment variables for sensitive data
+- Validate all user inputs
+- Implement rate limiting
+- Use HTTPS for all API calls
+- Sanitize file uploads
+- Implement content moderation
 
 ---
 
-Remember: Media processing can be resource-intensive and time-consuming.
-Always provide feedback to users and handle errors gracefully.
+Remember: This is a complex system with multiple components. Always consider:
+- Performance implications
+- Memory usage
+- API rate limits
+- User experience
+- Error handling
+- Security
 
 **QUALITY FIRST. PERFORMANCE SECOND. USER EXPERIENCE THIRD.**

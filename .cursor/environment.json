@@ -3,10 +3,10 @@
   "description": "Cursor IDE environment configuration for AI Program Video and Music Overlay",
   "project": {
     "name": "AI Program Video and Music Overlay",
-    "type": "media-processing",
-    "language": "python",
-    "framework": "custom",
-    "architecture": "media-pipeline"
+    "type": "unified-video-platform",
+    "language": "python,typescript",
+    "framework": "fastapi,nextjs",
+    "architecture": "microservices-with-agents"
   },
   "variables": {
     "LOG_LEVEL": "INFO",
@@ -14,9 +14,13 @@
     "NODE_ENV": "development",
     "MEDIA_OUTPUT_DIR": "${workspaceFolder}/output",
     "MEDIA_TEMP_DIR": "${workspaceFolder}/temp",
+    "GENERATED_DIR": "${workspaceFolder}/generated",
     "MAX_FILE_SIZE_MB": "2048",
     "DEFAULT_VIDEO_QUALITY": "high",
-    "DEFAULT_AUDIO_BITRATE": "192"
+    "DEFAULT_AUDIO_BITRATE": "192",
+    "FASTAPI_PORT": "8000",
+    "NEXTJS_PORT": "3000",
+    "WORKFLOW_MODE": "hybrid"
   },
   "rpc": {
     "tracing": {
@@ -36,6 +40,7 @@
       "*.log",
       "output/**",
       "temp/**",
+      "generated/**",
       "*.mp4",
       "*.avi",
       "*.mov",
@@ -46,7 +51,11 @@
       "build",
       "*.db",
       "*.csv",
-      "*.json.gz"
+      "*.json.gz",
+      "dashboard/node_modules",
+      "dashboard/.next",
+      "test-results",
+      "playwright-report"
     ],
     "include": [
       "**/*.py",
@@ -137,9 +146,36 @@
       "/status",
       "/process",
       "/preview",
-      "/cleanup"
+      "/cleanup",
+      "/agents",
+      "/workflow",
+      "/api",
+      "/dashboard"
     ],
     "path": "${workspaceFolder}/.cursor/commands"
+  },
+  "agents": {
+    "enabled": true,
+    "count": 10,
+    "types": [
+      "video",
+      "music",
+      "image",
+      "voice",
+      "content",
+      "editing",
+      "optimization",
+      "analytics",
+      "safety",
+      "social"
+    ],
+    "orchestrator": "app.agents.orchestrator"
+  },
+  "workflows": {
+    "enabled": true,
+    "modes": ["sequential", "parallel", "hybrid"],
+    "defaultMode": "hybrid",
+    "engine": "app.workflows.engine"
   },
   "cloud": {
     "enabled": true,
