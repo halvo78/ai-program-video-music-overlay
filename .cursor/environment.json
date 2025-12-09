@@ -7,7 +7,13 @@
     "language": "python,typescript",
     "framework": "fastapi,nextjs",
     "architecture": "microservices-with-agents",
-    "repository": "https://github.com/halvo78/ai-program-video-music-overlay"
+    "repository": {
+      "url": "https://github.com/halvo78/ai-program-video-music-overlay.git",
+      "owner": "halvo78",
+      "name": "ai-program-video-music-overlay",
+      "branch": "main",
+      "remote": "origin"
+    }
   },
   "variables": {
     "LOG_LEVEL": "INFO",
@@ -138,6 +144,18 @@
       "codeStyle": "project-standard"
     }
   },
+  "git": {
+    "enabled": true,
+    "remote": {
+      "origin": {
+        "url": "https://github.com/halvo78/ai-program-video-music-overlay.git",
+        "fetch": "+refs/heads/*:refs/remotes/origin/*"
+      }
+    },
+    "branch": "main",
+    "autoFetch": true,
+    "autoStash": true
+  },
   "mcp": {
     "enabled": true,
     "configPath": "~/.cursor/mcp.json",
@@ -146,6 +164,10 @@
         "filesystem",
         "github"
       ],
+      "github": {
+        "repository": "halvo78/ai-program-video-music-overlay",
+        "enabled": true
+      }
       "optional": [
         "memory",
         "sequential-thinking",
