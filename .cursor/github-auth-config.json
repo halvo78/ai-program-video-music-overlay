@@ -1,0 +1,36 @@
+{
+  "github": {
+    "repository": "halvo78/ai-program-video-music-overlay",
+    "owner": "halvo78",
+    "api": {
+      "baseUrl": "https://api.github.com",
+      "version": "v3"
+    },
+    "authentication": {
+      "methods": [
+        "environment_variable",
+        "git_credential",
+        "github_secrets"
+      ],
+      "priority": [
+        "GITHUB_TOKEN",
+        "GH_TOKEN",
+        "git credential"
+      ]
+    },
+    "runtime": {
+      "enabled": true,
+      "workflowTrigger": "api",
+      "workflowDispatch": true,
+      "apiAccess": true
+    }
+  },
+  "cursor": {
+    "githubIntegration": {
+      "enabled": true,
+      "autoDetect": true,
+      "useMCP": true,
+      "mcpServer": "github"
+    }
+  }
+}
