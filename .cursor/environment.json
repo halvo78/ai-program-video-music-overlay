@@ -166,7 +166,10 @@
       ],
       "github": {
         "repository": "halvo78/ai-program-video-music-overlay",
-        "enabled": true
+        "enabled": true,
+        "token": "${GITHUB_TOKEN}",
+        "apiUrl": "https://api.github.com",
+        "scopes": ["repo", "workflow", "actions:read", "actions:write"]
       }
       "optional": [
         "memory",
@@ -218,6 +221,7 @@
     "encryption": true,
     "note": "Secrets should be stored in .env file, not here",
     "required": [
+      "GITHUB_TOKEN",
       "TOGETHER_AI_API_KEY",
       "HUGGINGFACE_API_KEY",
       "OPENAI_API_KEY",

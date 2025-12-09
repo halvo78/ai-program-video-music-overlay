@@ -1,0 +1,117 @@
+{
+  "github": {
+    "enabled": true,
+    "repository": {
+      "owner": "halvo78",
+      "name": "ai-program-video-music-overlay",
+      "fullName": "halvo78/ai-program-video-music-overlay",
+      "url": "https://github.com/halvo78/ai-program-video-music-overlay",
+      "apiUrl": "https://api.github.com/repos/halvo78/ai-program-video-music-overlay",
+      "branch": "main"
+    },
+    "authentication": {
+      "method": "token",
+      "tokenSource": "environment",
+      "tokenEnvVar": "GITHUB_TOKEN",
+      "scopes": [
+        "repo",
+        "workflow",
+        "actions:read",
+        "actions:write"
+      ],
+      "note": "Token should be stored in environment variable or GitHub Secrets"
+    },
+    "api": {
+      "baseUrl": "https://api.github.com",
+      "version": "v3",
+      "timeout": 30000,
+      "retry": {
+        "enabled": true,
+        "maxAttempts": 3,
+        "backoff": "exponential"
+      }
+    },
+    "actions": {
+      "enabled": true,
+      "workflows": {
+        "ci": ".github/workflows/ci.yml",
+        "cloudAgents": ".github/workflows/cloud-agents.yml",
+        "deploy": ".github/workflows/deploy.yml",
+        "agentTesting": ".github/workflows/agent-testing.yml",
+        "codespaces": ".github/workflows/codespaces-setup.yml"
+      },
+      "secrets": {
+        "required": [
+          "TOGETHER_AI_API_KEY",
+          "HUGGINGFACE_API_KEY",
+          "OPENAI_API_KEY",
+          "ANTHROPIC_API_KEY"
+        ],
+        "optional": [
+          "AWS_ACCESS_KEY_ID",
+          "AWS_SECRET_ACCESS_KEY",
+          "FLUX_API_KEY",
+          "STRIPE_SECRET_KEY",
+          "SUPABASE_URL",
+          "SUPABASE_KEY",
+          "VERCEL_TOKEN",
+          "VERCEL_ORG_ID",
+          "VERCEL_PROJECT_ID"
+        ]
+      },
+      "runners": {
+        "default": "ubuntu-latest",
+        "available": [
+          "ubuntu-latest",
+          "windows-latest",
+          "macos-latest"
+        ]
+      }
+    },
+    "webhooks": {
+      "enabled": false,
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_run"
+      ]
+    },
+    "permissions": {
+      "contents": "write",
+      "actions": "write",
+      "issues": "write",
+      "pull_requests": "write",
+      "workflows": "write"
+    }
+  },
+  "runtime": {
+    "environment": "development",
+    "python": {
+      "version": "3.11",
+      "path": "${workspaceFolder}/venv/Scripts/python.exe",
+      "requirements": "requirements.txt"
+    },
+    "node": {
+      "version": "18",
+      "path": "node",
+      "packageManager": "npm"
+    },
+    "paths": {
+      "workspace": "${workspaceFolder}",
+      "output": "${workspaceFolder}/output",
+      "temp": "${workspaceFolder}/temp",
+      "generated": "${workspaceFolder}/generated",
+      "logs": "${workspaceFolder}/logs"
+    }
+  },
+  "cloudAgents": {
+    "github": {
+      "enabled": true,
+      "workflow": ".github/workflows/cloud-agents.yml",
+      "triggerMethod": "workflow_dispatch",
+      "apiMethod": "rest",
+      "maxConcurrentRuns": 5,
+      "timeout": 3600
+    }
+  }
+}
