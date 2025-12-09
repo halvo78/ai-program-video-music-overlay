@@ -20,6 +20,8 @@ import {
   Share2,
   Sparkles,
   PlayCircle,
+  Shield,
+  Image as ImageIcon,
 } from 'lucide-react';
 
 // Professional gradient text - use sparingly
@@ -534,10 +536,183 @@ const FAQItem = ({ question, answer }: { question: string; answer: string }) => 
   );
 };
 
+// Enhanced Dashboard Stats Component
+const DashboardStats = () => {
+  const stats = [
+    { label: 'Videos Created', value: '2,847', change: '+12%', icon: Video, bgColor: 'bg-blue-50', iconColor: 'text-blue-600' },
+    { label: 'Total Views', value: '24.7M', change: '+8%', icon: PlayCircle, bgColor: 'bg-green-50', iconColor: 'text-green-600' },
+    { label: 'AI Agents Active', value: '10/10', change: '100%', icon: Bot, bgColor: 'bg-purple-50', iconColor: 'text-purple-600' },
+    { label: 'Platforms Connected', value: '5/5', change: '100%', icon: Globe, bgColor: 'bg-orange-50', iconColor: 'text-orange-600' },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {stats.map((stat, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.1 }}
+          className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className={`w-12 h-12 rounded-xl ${stat.bgColor} flex items-center justify-center`}>
+              <stat.icon className={`w-6 h-6 ${stat.iconColor}`} />
+            </div>
+            <span className="text-sm font-medium text-green-600">{stat.change}</span>
+          </div>
+          <h3 className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</h3>
+          <p className="text-sm text-gray-600">{stat.label}</p>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+// Agent Status Grid
+const AgentStatusGrid = () => {
+  const agents = [
+    { name: 'Content Agent', status: 'active', tasks: 3, icon: Type },
+    { name: 'Video Agent', status: 'active', tasks: 2, icon: Video },
+    { name: 'Music Agent', status: 'idle', tasks: 0, icon: Music },
+    { name: 'Image Agent', status: 'active', tasks: 1, icon: ImageIcon },
+    { name: 'Voice Agent', status: 'idle', tasks: 0, icon: Mic },
+    { name: 'Editing Agent', status: 'active', tasks: 2, icon: Wand2 },
+    { name: 'Optimization Agent', status: 'idle', tasks: 0, icon: Sparkles },
+    { name: 'Analytics Agent', status: 'active', tasks: 1, icon: Star },
+    { name: 'Safety Agent', status: 'active', tasks: 1, icon: Shield },
+    { name: 'Social Agent', status: 'idle', tasks: 0, icon: Share2 },
+  ];
+
+  return (
+    <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-8">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">AI Agents Status</h2>
+        <Link href="/agents" className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1">
+          View All <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        {agents.map((agent, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: i * 0.05 }}
+            className="relative p-4 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <agent.icon className="w-5 h-5 text-gray-600" />
+              <div className={`w-2 h-2 rounded-full ${
+                agent.status === 'active' ? 'bg-green-500' : 'bg-gray-300'
+              }`} />
+            </div>
+            <h3 className="text-sm font-semibold text-gray-900 mb-1">{agent.name}</h3>
+            <p className="text-xs text-gray-500">
+              {agent.status === 'active' ? `${agent.tasks} tasks` : 'Idle'}
+            </p>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default function HomePage() {
   const [prompt, setPrompt] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Toggle for dashboard vs landing
   const { scrollYProgress } = useScroll();
 
+  // If logged in, show dashboard view
+  if (isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Dashboard Navigation */}
+        <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+          <div className="container">
+            <div className="flex items-center justify-between h-16">
+              <Link href="/" className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-lg font-bold text-gray-900">Taj Chat</span>
+              </Link>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setIsLoggedIn(false)}
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
+                  View Landing
+                </button>
+                <Link href="/create" className="btn-primary">
+                  Create Video
+                </Link>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <div className="container py-8">
+          {/* Welcome Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome back! 👋</h1>
+            <p className="text-gray-600">Here's what's happening with your videos today.</p>
+          </motion.div>
+
+          {/* Stats Grid */}
+          <DashboardStats />
+
+          {/* Agent Status */}
+          <AgentStatusGrid />
+
+          {/* Recent Videos & Quick Actions */}
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Recent Videos */}
+            <div className="lg:col-span-2">
+              <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900">Recent Videos</h2>
+                  <Link href="/gallery" className="text-blue-600 hover:text-blue-700 font-medium text-sm">
+                    View All
+                  </Link>
+                </div>
+                <VideoWall />
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+              <div className="space-y-3">
+                <Link href="/create" className="block w-full btn-primary text-center">
+                  <Wand2 className="w-5 h-5 inline mr-2" />
+                  Create New Video
+                </Link>
+                <Link href="/studio" className="block w-full btn-secondary text-center">
+                  <Video className="w-5 h-5 inline mr-2" />
+                  Open Studio
+                </Link>
+                <Link href="/templates" className="block w-full btn-secondary text-center">
+                  <Sparkles className="w-5 h-5 inline mr-2" />
+                  Browse Templates
+                </Link>
+                <Link href="/social" className="block w-full btn-secondary text-center">
+                  <Share2 className="w-5 h-5 inline mr-2" />
+                  Publish to Social
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Landing page view (existing)
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation - Clean and Professional */}
@@ -567,6 +742,12 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsLoggedIn(true)}
+                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              >
+                Dashboard
+              </button>
               <Link href="/settings" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                 Login
               </Link>
