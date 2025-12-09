@@ -1,0 +1,192 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🚀 Start FastAPI Server",
+      "type": "shell",
+      "command": "uvicorn",
+      "args": [
+        "app.main:app",
+        "--reload",
+        "--port",
+        "8000",
+        "--host",
+        "0.0.0.0"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "🎨 Start Next.js Dashboard",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "dev"],
+      "options": {
+        "cwd": "${workspaceFolder}/dashboard"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "🧪 Run Python Tests",
+      "type": "shell",
+      "command": "pytest",
+      "args": [
+        "tests/",
+        "-v",
+        "--cov=app",
+        "--cov-report=html",
+        "--cov-report=term"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "🔍 Lint Python (Ruff)",
+      "type": "shell",
+      "command": "ruff",
+      "args": ["check", ".", "--fix"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "✨ Format Python (Ruff)",
+      "type": "shell",
+      "command": "ruff",
+      "args": ["format", "."],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🔍 Type Check Python (mypy)",
+      "type": "shell",
+      "command": "mypy",
+      "args": ["app", "--ignore-missing-imports"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🧪 Run Dashboard Tests",
+      "type": "shell",
+      "command": "npm",
+      "args": ["test"],
+      "options": {
+        "cwd": "${workspaceFolder}/dashboard"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🏗️ Build Dashboard",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "build"],
+      "options": {
+        "cwd": "${workspaceFolder}/dashboard"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "📦 Install Python Dependencies",
+      "type": "shell",
+      "command": "pip",
+      "args": ["install", "-r", "requirements.txt"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "📦 Install Dashboard Dependencies",
+      "type": "shell",
+      "command": "npm",
+      "args": ["install"],
+      "options": {
+        "cwd": "${workspaceFolder}/dashboard"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🔄 Full Stack (API + Dashboard)",
+      "dependsOn": [
+        "🚀 Start FastAPI Server",
+        "🎨 Start Next.js Dashboard"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🧹 Clean Python Cache",
+      "type": "shell",
+      "command": "Get-ChildItem",
+      "args": [
+        "-Path",
+        ".",
+        "-Include",
+        "__pycache__,*.pyc,*.pyo,*.pyd,.pytest_cache,.mypy_cache,.ruff_cache",
+        "-Recurse",
+        "-Force"
+      ],
+      "windows": {
+        "command": "powershell",
+        "args": [
+          "-Command",
+          "Get-ChildItem -Path . -Include __pycache__,*.pyc,*.pyo,*.pyd,.pytest_cache,.mypy_cache,.ruff_cache -Recurse -Force | Remove-Item -Force -Recurse"
+        ]
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "📊 Generate Coverage Report",
+      "type": "shell",
+      "command": "pytest",
+      "args": [
+        "tests/",
+        "--cov=app",
+        "--cov-report=html",
+        "--cov-report=term-missing"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    }
+  ]
+}

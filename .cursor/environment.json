@@ -1,12 +1,13 @@
 {
-  "version": "2.0",
-  "description": "Cursor IDE environment configuration for AI Program Video and Music Overlay",
+  "version": "3.0",
+  "description": "Complete Cursor IDE environment for Unified AI Video Creation Platform with Cloud Agents and Distributed Processing",
   "project": {
     "name": "AI Program Video and Music Overlay",
     "type": "unified-video-platform",
     "language": "python,typescript",
     "framework": "fastapi,nextjs",
-    "architecture": "microservices-with-agents"
+    "architecture": "microservices-with-agents",
+    "repository": "https://github.com/halvo78/ai-program-video-music-overlay"
   },
   "variables": {
     "LOG_LEVEL": "INFO",
@@ -20,19 +21,29 @@
     "DEFAULT_AUDIO_BITRATE": "192",
     "FASTAPI_PORT": "8000",
     "NEXTJS_PORT": "3000",
-    "WORKFLOW_MODE": "hybrid"
+    "WORKFLOW_MODE": "hybrid",
+    "AGENT_POOL_SIZE": "10",
+    "ENABLE_CLOUD_AGENTS": "true",
+    "CLOUD_AGENT_REGION": "us-east-1"
   },
   "rpc": {
     "tracing": {
       "enabled": true,
       "logPath": "${workspaceFolder}/.cursor/logs/rpc",
       "level": "info",
-      "maxFiles": 10,
-      "maxFileSize": "10MB"
+      "maxFiles": 20,
+      "maxFileSize": "50MB",
+      "retentionDays": 7
+    },
+    "performance": {
+      "enableMetrics": true,
+      "enableProfiling": true,
+      "slowQueryThreshold": 1000
     }
   },
   "indexing": {
     "enabled": true,
+    "strategy": "smart",
     "exclude": [
       "node_modules",
       "__pycache__",
@@ -44,18 +55,27 @@
       "*.mp4",
       "*.avi",
       "*.mov",
+      "*.mkv",
+      "*.webm",
       "*.mp3",
       "*.wav",
+      "*.aac",
       ".next",
       "dist",
       "build",
       "*.db",
+      "*.sqlite",
       "*.csv",
       "*.json.gz",
       "dashboard/node_modules",
       "dashboard/.next",
       "test-results",
-      "playwright-report"
+      "playwright-report",
+      ".pytest_cache",
+      ".mypy_cache",
+      ".ruff_cache",
+      "htmlcov",
+      "coverage"
     ],
     "include": [
       "**/*.py",
@@ -68,80 +88,167 @@
       "**/*.yaml",
       "**/*.json",
       "**/*.toml",
-      "**/*.config.*"
-    ]
+      "**/*.config.*",
+      "**/*.env.example"
+    ],
+    "priority": {
+      "high": [
+        "app/**/*.py",
+        "dashboard/**/*.tsx",
+        "dashboard/**/*.ts",
+        "*.md"
+      ],
+      "medium": [
+        "tests/**/*.py",
+        "config/**/*"
+      ]
+    }
   },
   "ai": {
-    "model": "claude-sonnet-4-20250514",
+    "model": {
+      "primary": "claude-sonnet-4-20250514",
+      "fallback": "claude-opus-3",
+      "code": "claude-sonnet-4-20250514",
+      "chat": "claude-sonnet-4-20250514"
+    },
     "context": {
       "maxTokens": 200000,
       "includeImports": true,
-      "includeReferences": true
+      "includeReferences": true,
+      "includeDocumentation": true,
+      "includeTests": true,
+      "maxFiles": 100,
+      "smartContext": true,
+      "contextWindow": "large"
     },
     "safety": {
       "requireApprovalForFileDeletion": true,
+      "requireApprovalForGitPush": false,
       "defaultProcessingMode": "safe",
-      "enforceMemoryLimits": true
+      "enforceMemoryLimits": true,
+      "maxFileSizeMB": 100,
+      "blockDangerousOperations": true
+    },
+    "codeGeneration": {
+      "preferTypeHints": true,
+      "preferAsyncAwait": true,
+      "includeErrorHandling": true,
+      "includeLogging": true,
+      "includeTests": false,
+      "codeStyle": "project-standard"
     }
   },
   "mcp": {
+    "enabled": true,
     "configPath": "~/.cursor/mcp.json",
     "servers": {
-      "required": ["filesystem"],
+      "required": [
+        "filesystem",
+        "github"
+      ],
       "optional": [
-        "github",
         "memory",
-        "sequential-thinking"
+        "sequential-thinking",
+        "postgres",
+        "redis",
+        "aws",
+        "telegram",
+        "notion",
+        "sentry"
       ]
+    },
+    "timeout": 30000,
+    "retry": {
+      "enabled": true,
+      "maxAttempts": 3,
+      "backoff": "exponential"
     }
   },
   "terminal": {
     "defaultProfile": "PowerShell",
+    "profiles": {
+      "PowerShell": {
+        "path": "powershell.exe",
+        "args": ["-NoLogo"]
+      },
+      "Command Prompt": {
+        "path": "cmd.exe"
+      },
+      "Git Bash": {
+        "path": "C:\\Program Files\\Git\\bin\\bash.exe"
+      }
+    },
     "env": {
       "PYTHONPATH": "${workspaceFolder}",
       "LOG_LEVEL": "INFO",
-      "MEDIA_OUTPUT_DIR": "${workspaceFolder}/output"
+      "MEDIA_OUTPUT_DIR": "${workspaceFolder}/output",
+      "GENERATED_DIR": "${workspaceFolder}/generated"
+    },
+    "integrated": {
+      "cursorBlinking": true,
+      "fontSize": 14,
+      "fontFamily": "Consolas, 'Courier New', monospace",
+      "scrollback": 10000
     }
   },
   "secrets": {
     "storage": "environment",
+    "encryption": true,
     "note": "Secrets should be stored in .env file, not here",
-    "required": [],
+    "required": [
+      "TOGETHER_AI_API_KEY",
+      "HUGGINGFACE_API_KEY",
+      "OPENAI_API_KEY",
+      "ANTHROPIC_API_KEY"
+    ],
     "optional": [
-      "API_KEYS",
-      "CLOUD_STORAGE_CREDENTIALS"
+      "FLUX_API_KEY",
+      "TWITTER_API_KEY",
+      "YOUTUBE_API_KEY",
+      "TELEGRAM_BOT_TOKEN",
+      "STRIPE_SECRET_KEY",
+      "SUPABASE_URL",
+      "SUPABASE_KEY",
+      "AWS_ACCESS_KEY_ID",
+      "AWS_SECRET_ACCESS_KEY"
     ]
   },
   "mediaProcessing": {
     "enabled": true,
     "defaultFormats": {
-      "video": ["mp4", "avi", "mov", "mkv"],
-      "audio": ["mp3", "wav", "aac", "ogg"]
+      "video": ["mp4", "avi", "mov", "mkv", "webm"],
+      "audio": ["mp3", "wav", "aac", "ogg", "flac"]
     },
     "quality": {
       "high": {
         "videoBitrate": "5000k",
         "audioBitrate": "192k",
-        "resolution": "1080p"
+        "resolution": "1080p",
+        "fps": 30
       },
       "medium": {
         "videoBitrate": "2500k",
         "audioBitrate": "128k",
-        "resolution": "720p"
+        "resolution": "720p",
+        "fps": 30
       },
       "low": {
         "videoBitrate": "1000k",
         "audioBitrate": "96k",
-        "resolution": "480p"
+        "resolution": "480p",
+        "fps": 24
       }
     },
     "memory": {
       "maxFileSizeMB": 2048,
       "chunkSizeMB": 100,
-      "enableStreaming": true
+      "enableStreaming": true,
+      "enableCaching": true,
+      "cacheSizeMB": 500
     }
   },
   "commands": {
+    "enabled": true,
     "available": [
       "/status",
       "/process",
@@ -150,9 +257,18 @@
       "/agents",
       "/workflow",
       "/api",
-      "/dashboard"
+      "/dashboard",
+      "/test",
+      "/deploy",
+      "/monitor"
     ],
-    "path": "${workspaceFolder}/.cursor/commands"
+    "path": "${workspaceFolder}/.cursor/commands",
+    "aliases": {
+      "/s": "/status",
+      "/p": "/process",
+      "/a": "/agents",
+      "/w": "/workflow"
+    }
   },
   "agents": {
     "enabled": true,
@@ -169,13 +285,33 @@
       "safety",
       "social"
     ],
-    "orchestrator": "app.agents.orchestrator"
+    "orchestrator": "app.agents.orchestrator",
+    "communication": {
+      "protocol": "async",
+      "timeout": 30000,
+      "retry": true,
+      "maxRetries": 3
+    },
+    "monitoring": {
+      "enabled": true,
+      "metrics": true,
+      "logging": true,
+      "healthChecks": true
+    }
   },
   "workflows": {
     "enabled": true,
     "modes": ["sequential", "parallel", "hybrid"],
     "defaultMode": "hybrid",
-    "engine": "app.workflows.engine"
+    "engine": "app.workflows.engine",
+    "persistence": {
+      "enabled": true,
+      "storage": "database"
+    },
+    "scheduling": {
+      "enabled": true,
+      "timezone": "UTC"
+    }
   },
   "cloud": {
     "enabled": true,
@@ -183,26 +319,190 @@
       "workspace": true,
       "settings": true,
       "extensions": false,
+      "keybindings": true,
+      "snippets": true,
+      "tasks": true,
+      "launch": true,
       "exclude": [
         "output/**",
         "temp/**",
+        "generated/**",
         "*.mp4",
         "*.avi",
         "*.mov",
         "*.mkv",
+        "*.webm",
         "*.mp3",
         "*.wav",
         "*.aac",
         "node_modules/**",
         "__pycache__/**",
         ".git/**",
-        "*.log"
+        "*.log",
+        ".pytest_cache/**",
+        "coverage/**"
       ]
     },
     "collaboration": {
       "enabled": true,
       "shareWorkspace": true,
-      "shareContext": true
+      "shareContext": true,
+      "shareAgents": true,
+      "permissions": {
+        "read": true,
+        "write": false,
+        "admin": false
+      }
+    },
+    "agents": {
+      "enabled": true,
+      "distributed": true,
+      "platforms": {
+        "aws": {
+          "enabled": true,
+          "region": "us-east-1",
+          "maxAgents": 50,
+          "instanceTypes": ["t3.medium", "t3.large"]
+        },
+        "docker": {
+          "enabled": true,
+          "maxAgents": 20,
+          "image": "cursor-agent:latest"
+        },
+        "kubernetes": {
+          "enabled": false,
+          "namespace": "cursor-agents",
+          "maxAgents": 100
+        }
+      },
+      "orchestration": {
+        "mode": "hybrid",
+        "loadBalancing": true,
+        "autoScaling": true,
+        "healthChecks": true
+      },
+      "resources": {
+        "cpu": {
+          "min": 1,
+          "max": 4,
+          "default": 2
+        },
+        "memory": {
+          "min": "512MB",
+          "max": "4GB",
+          "default": "2GB"
+        },
+        "gpu": {
+          "enabled": false,
+          "type": "nvidia-t4"
+        }
+      }
+    },
+    "storage": {
+      "enabled": true,
+      "provider": "s3",
+      "bucket": "cursor-workspace-sync",
+      "region": "us-east-1",
+      "encryption": true
+    }
+  },
+  "debugging": {
+    "enabled": true,
+    "configurations": [
+      {
+        "name": "Python: FastAPI",
+        "type": "python",
+        "request": "launch",
+        "module": "uvicorn",
+        "args": ["app.main:app", "--reload", "--port", "8000"],
+        "jinja": true,
+        "justMyCode": false
+      },
+      {
+        "name": "Python: Current File",
+        "type": "python",
+        "request": "launch",
+        "program": "${file}",
+        "console": "integratedTerminal",
+        "justMyCode": false
+      },
+      {
+        "name": "Next.js: Debug",
+        "type": "node",
+        "request": "launch",
+        "name": "Next.js",
+        "runtimeExecutable": "npm",
+        "runtimeArgs": ["run", "dev"],
+        "cwd": "${workspaceFolder}/dashboard",
+        "port": 9229
+      }
+    ]
+  },
+  "testing": {
+    "enabled": true,
+    "frameworks": {
+      "python": "pytest",
+      "typescript": "jest",
+      "e2e": "playwright"
+    },
+    "coverage": {
+      "enabled": true,
+      "threshold": 80,
+      "reporters": ["html", "text", "lcov"]
+    },
+    "parallel": {
+      "enabled": true,
+      "workers": 4
+    }
+  },
+  "linting": {
+    "enabled": true,
+    "python": {
+      "tool": "ruff",
+      "config": "pyproject.toml",
+      "formatOnSave": true,
+      "fixOnSave": true
+    },
+    "typescript": {
+      "tool": "eslint",
+      "config": ".eslintrc.json",
+      "formatOnSave": true,
+      "fixOnSave": true
+    }
+  },
+  "git": {
+    "enabled": true,
+    "autoFetch": true,
+    "autoStash": true,
+    "confirmSync": false,
+    "branchProtection": {
+      "main": {
+        "requirePullRequest": true,
+        "requireApproval": false
+      }
+    }
+  },
+  "notifications": {
+    "enabled": true,
+    "types": {
+      "build": true,
+      "test": true,
+      "deploy": true,
+      "errors": true,
+      "warnings": false
+    }
+  },
+  "performance": {
+    "optimization": {
+      "enabled": true,
+      "lazyLoading": true,
+      "codeSplitting": true,
+      "caching": true
+    },
+    "monitoring": {
+      "enabled": true,
+      "metrics": true,
+      "profiling": false
     }
   }
 }
