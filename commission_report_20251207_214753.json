@@ -1,0 +1,126 @@
+{
+  "id": "commission_20251207_214742",
+  "start_time": "2025-12-07T21:47:42.881308",
+  "end_time": "2025-12-07T21:47:53.329875",
+  "status": "failed_critical",
+  "duration_seconds": 10.448567,
+  "phases": [
+    {
+      "name": "Research & Analysis",
+      "status": "completed",
+      "duration_seconds": 1.038381,
+      "summary": {
+        "swarm_name": "Research Agent Swarm",
+        "total_agents": 10,
+        "agents_passed": 10,
+        "agents_failed": 0,
+        "pass_rate": 1.0,
+        "total_findings": 2,
+        "critical_findings": 0,
+        "high_findings": 0,
+        "medium_findings": 0,
+        "low_findings": 2,
+        "info_findings": 0,
+        "total_duration_seconds": 6.817929,
+        "overall_status": "PASSED"
+      }
+    },
+    {
+      "name": "Engineering Validation",
+      "status": "completed",
+      "duration_seconds": 1.190396,
+      "summary": {
+        "swarm_name": "Engineering Agent Swarm",
+        "total_agents": 10,
+        "agents_passed": 10,
+        "agents_failed": 0,
+        "pass_rate": 1.0,
+        "total_findings": 0,
+        "critical_findings": 0,
+        "high_findings": 0,
+        "medium_findings": 0,
+        "low_findings": 0,
+        "info_findings": 0,
+        "total_duration_seconds": 6.442802,
+        "overall_status": "PASSED"
+      }
+    },
+    {
+      "name": "Testing",
+      "status": "completed",
+      "duration_seconds": 5.034074,
+      "summary": {
+        "swarm_name": "Testing Agent Swarm",
+        "total_agents": 10,
+        "agents_passed": 9,
+        "agents_failed": 1,
+        "pass_rate": 0.9,
+        "total_findings": 2,
+        "critical_findings": 2,
+        "high_findings": 0,
+        "medium_findings": 0,
+        "low_findings": 0,
+        "info_findings": 0,
+        "total_duration_seconds": 14.379875,
+        "overall_status": "FAILED"
+      }
+    },
+    {
+      "name": "Production Readiness",
+      "status": "completed",
+      "duration_seconds": 1.114346,
+      "summary": {
+        "swarm_name": "Production Agent Swarm",
+        "total_agents": 10,
+        "agents_passed": 10,
+        "agents_failed": 0,
+        "pass_rate": 1.0,
+        "total_findings": 0,
+        "critical_findings": 0,
+        "high_findings": 0,
+        "medium_findings": 0,
+        "low_findings": 0,
+        "info_findings": 0,
+        "total_duration_seconds": 6.125398,
+        "overall_status": "PASSED"
+      }
+    },
+    {
+      "name": "Proof & Verification",
+      "status": "completed",
+      "duration_seconds": 2.07137,
+      "summary": {
+        "swarm_name": "Proof Agent Swarm",
+        "total_agents": 10,
+        "agents_passed": 10,
+        "agents_failed": 0,
+        "pass_rate": 1.0,
+        "total_findings": 0,
+        "critical_findings": 0,
+        "high_findings": 0,
+        "medium_findings": 0,
+        "low_findings": 0,
+        "info_findings": 0,
+        "total_duration_seconds": 8.754178,
+        "overall_status": "PASSED"
+      }
+    }
+  ],
+  "summary": {
+    "total_agents": 50,
+    "agents_passed": 49,
+    "agents_failed": 1,
+    "pass_rate": 0.98,
+    "total_findings": 4,
+    "critical_findings": 2,
+    "high_findings": 0,
+    "medium_findings": 0,
+    "low_findings": 2,
+    "info_findings": 0
+  },
+  "recommendations": [
+    "URGENT: Address 2 critical findings immediately",
+    "Review 1 failed agent checks and fix underlying issues"
+  ],
+  "overall_result": "FAILED"
+}

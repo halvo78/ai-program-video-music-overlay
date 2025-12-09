@@ -1,0 +1,3 @@
+"""
+Taj Chat Tests
+"""
