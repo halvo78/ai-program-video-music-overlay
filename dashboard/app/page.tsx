@@ -587,10 +587,19 @@ const AgentStatusGrid = () => {
   return (
     <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-8">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">AI Agents Status</h2>
-        <Link href="/agents" className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1">
-          View All <ArrowRight className="w-4 h-4" />
-        </Link>
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">AI Agents Status</h2>
+          <p className="text-sm text-gray-600 mt-1">10 Core Agents + 50 Dashboard Agents</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard-agents" className="text-purple-600 hover:text-purple-700 font-medium text-sm flex items-center gap-1 bg-purple-50 px-3 py-1.5 rounded-lg">
+            <Bot className="w-4 h-4" />
+            50 Agents
+          </Link>
+          <Link href="/agents" className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1">
+            View All <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {agents.map((agent, i) => (
@@ -695,6 +704,10 @@ export default function HomePage() {
                 <Link href="/studio" className="block w-full btn-secondary text-center">
                   <Video className="w-5 h-5 inline mr-2" />
                   Open Studio
+                </Link>
+                <Link href="/dashboard-agents" className="block w-full btn-secondary text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700">
+                  <Bot className="w-5 h-5 inline mr-2" />
+                  Manage 50 Agents
                 </Link>
                 <Link href="/templates" className="block w-full btn-secondary text-center">
                   <Sparkles className="w-5 h-5 inline mr-2" />
