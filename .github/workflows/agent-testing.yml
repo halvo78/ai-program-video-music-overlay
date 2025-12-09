@@ -54,7 +54,7 @@ jobs:
           pytest tests/test_agents.py::test_${{ matrix.agent }}_agent -v --cov=app.agents.${{ matrix.agent }}_agent --cov-report=term
       
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           file: ./coverage.xml
           flags: ${{ matrix.agent }}-agent
