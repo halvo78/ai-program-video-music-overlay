@@ -1,0 +1,157 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# CURSOR INDEXING IGNORE FILE
+# AI Program Video and Music Overlay - Optimized for fast indexing
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+.next/
+out/
+bin/
+obj/
+
+# Cache directories
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+.turbo/
+.npm/
+.yarn/
+
+# IDE/Editor
+.idea/
+# .vscode/ - Keep workspace settings for cloud sync
+*.swp
+*.swo
+*~
+*.sublime-*
+
+# Git
+.git/
+# .gitignore - Keep for version control
+
+# Environment files (sensitive)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Media files (large - exclude from indexing)
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.flv
+*.wmv
+*.mp3
+*.wav
+*.aac
+*.ogg
+*.flac
+*.m4a
+*.wma
+
+# Image files (large collections)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.webp
+!**/icons/**
+!**/logos/**
+
+# Output/processed files
+output/
+processed/
+temp/
+tmp/
+*.tmp
+*.temp
+*.bak
+
+# Data files
+*.db
+*.sqlite
+*.sqlite3
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.parquet
+*.feather
+*.arrow
+
+# Large binary files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+*.iso
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Frontend build artifacts
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# Test artifacts
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+test-results/
+playwright-report/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+
+# Certificates (sensitive)
+*.pem
+*.key
+*.crt
+*.p12
+
+# FFmpeg/Media processing artifacts
+*.ffmpeg
+*.ffprobe
+ffmpeg_logs/
+
+# Large JSON/CSV data files
+*.csv
+*.json.gz
+*.jsonl
+!package.json
+!tsconfig.json
+!*.config.json

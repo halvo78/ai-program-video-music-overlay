@@ -1,0 +1,52 @@
+{
+  // ============================================
+  // CURSOR IDE - WORKSPACE SETTINGS
+  // AI Program Video and Music Overlay
+  // ============================================
+
+  // === CURSOR CLOUD SYNC ===
+  "cursor.cloud.enabled": true,
+  "cursor.cloud.sync": {
+    "workspace": true,
+    "settings": true,
+    "extensions": false
+  },
+
+  // === WORKSPACE SPECIFIC ===
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/node_modules": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "output/**": false,
+    "temp/**": false
+  },
+
+  // === TERMINAL ===
+  "terminal.integrated.cwd": "${workspaceFolder}",
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+
+  // === FILES ===
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+
+  // === PYTHON (if using Python) ===
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
+
+  // === MEDIA FILE ASSOCIATIONS ===
+  "files.associations": {
+    "*.mp4": "plaintext",
+    "*.avi": "plaintext",
+    "*.mov": "plaintext",
+    "*.mp3": "plaintext",
+    "*.wav": "plaintext"
+  }
+}

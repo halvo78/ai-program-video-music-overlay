@@ -1,0 +1,186 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# AI PROGRAM VIDEO AND MUSIC OVERLAY - CURSOR AI RULES
+# ═══════════════════════════════════════════════════════════════════════════════
+# These rules govern AI behavior for video/music overlay processing and editing
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## SYSTEM IDENTITY
+
+You are assisting with an AI-powered video and music overlay program. This system processes
+video files, adds music overlays, and performs various media editing operations.
+
+**QUALITY AND PERFORMANCE ARE PARAMOUNT.**
+
+## 🎬 PROJECT CONTEXT
+
+This is a media processing application that:
+- Processes video files (various formats: MP4, AVI, MOV, etc.)
+- Adds music/audio overlays to videos
+- Handles video editing, effects, and transformations
+- Manages media file I/O and storage
+- Provides user interface for media operations
+
+## 📁 PROJECT STRUCTURE
+
+```
+ai-program-video-music-overlay/
+├── src/                    # Source code
+│   ├── video/              # Video processing modules
+│   ├── audio/              # Audio/music processing
+│   ├── overlay/            # Overlay rendering
+│   ├── effects/            # Video effects
+│   └── utils/              # Utilities
+├── config/                 # Configuration files
+├── assets/                 # Media assets (videos, music)
+├── output/                 # Processed output files
+├── tests/                  # Test suite
+└── docs/                   # Documentation
+```
+
+## 🏗️ ARCHITECTURE PATTERNS
+
+### Media Processing Pipeline
+1. **Input Layer** - File loading, format detection, validation
+2. **Processing Layer** - Video/audio manipulation, effects
+3. **Overlay Layer** - Music synchronization, overlay rendering
+4. **Output Layer** - Encoding, format conversion, file writing
+5. **UI Layer** - User interface, preview, controls
+
+### Code Style
+- Python 3.10+ with type hints (if Python-based)
+- TypeScript/JavaScript with strict types (if web-based)
+- Async/await for I/O operations
+- 100 character line limit
+- Clear function names and documentation
+
+## 🎵 MEDIA FILE HANDLING
+
+### Supported Formats
+- **Video**: MP4, AVI, MOV, MKV, WebM
+- **Audio**: MP3, WAV, AAC, OGG, FLAC
+- **Images**: PNG, JPG, GIF (for overlays)
+
+### File Management
+- Always validate file formats before processing
+- Check file sizes to prevent memory issues
+- Use temporary directories for processing
+- Clean up temporary files after operations
+- Handle large files with streaming when possible
+
+## 🚨 CRITICAL RULES
+
+### Rule 1: MEMORY MANAGEMENT
+- Large video files can consume significant memory
+- Use streaming/chunking for large files
+- Always close file handles after use
+- Monitor memory usage during processing
+
+### Rule 2: FILE VALIDATION
+- Always validate file existence before processing
+- Check file formats and codecs
+- Verify file integrity
+- Handle corrupted files gracefully
+
+### Rule 3: ERROR HANDLING
+- Media processing can fail for many reasons
+- Always wrap operations in try/except blocks
+- Provide clear error messages to users
+- Log errors for debugging
+
+### Rule 4: PERFORMANCE
+- Video processing is CPU/GPU intensive
+- Use appropriate libraries (FFmpeg, OpenCV, etc.)
+- Consider async processing for long operations
+- Show progress indicators for user feedback
+
+### Rule 5: OUTPUT QUALITY
+- Maintain video quality settings
+- Preserve aspect ratios
+- Handle audio/video sync correctly
+- Test output on different players/devices
+
+## 🧪 TESTING REQUIREMENTS
+
+1. **Unit Tests**: All processing functions must have tests
+2. **Integration Tests**: Test with sample media files
+3. **Format Tests**: Test various input formats
+4. **Performance Tests**: Monitor processing times
+5. **Quality Tests**: Verify output quality
+
+## 📝 COMMENT TAGS
+
+Use these special comment tags for media-critical code:
+
+```python
+# MEDIA: Code that processes video/audio files
+# OVERLAY: Code related to overlay rendering
+# SYNC: Code that handles audio/video synchronization
+# ENCODE: Code that handles encoding/decoding
+# MEMORY: Code that manages memory for large files
+# QUALITY: Code that affects output quality
+```
+
+## 🚫 FORBIDDEN PATTERNS
+
+NEVER generate code that:
+1. Hardcodes file paths (use configuration)
+2. Processes files without validation
+3. Leaves file handles open
+4. Processes files synchronously without progress feedback
+5. Ignores memory limits
+6. Overwrites source files without backup
+7. Uses blocking operations in UI thread
+8. Skips error handling
+
+## ✅ REQUIRED PATTERNS
+
+ALWAYS include in media processing code:
+1. Try/except with proper error handling
+2. File validation before processing
+3. Progress callbacks for long operations
+4. Resource cleanup (close files, release memory)
+5. Logging with appropriate levels
+6. Type hints on function signatures
+7. Docstrings explaining processing logic
+8. Configuration for quality settings
+
+## 🔧 DEVELOPMENT WORKFLOW
+
+1. **Before Changes**: Read existing implementation
+2. **Testing**: Run tests with sample media files
+3. **Linting**: Use appropriate linter for language
+4. **Commit**: Clear message with type prefix (feat/fix/refactor)
+5. **Deploy**: Test on target platform before release
+
+## 💾 STORAGE CONSIDERATIONS
+
+- Media files can be very large
+- Use appropriate storage solutions
+- Consider cloud storage for large files
+- Implement cleanup of old/temporary files
+- Monitor disk space usage
+
+## 🎨 UI/UX GUIDELINES
+
+- Show progress for long operations
+- Provide preview capabilities
+- Allow cancellation of operations
+- Display file information (duration, size, format)
+- Handle drag-and-drop file input
+- Show clear error messages
+
+## 📚 KEY LIBRARIES TO CONSIDER
+
+- **FFmpeg**: Video/audio processing
+- **OpenCV**: Video manipulation and effects
+- **Pillow**: Image processing
+- **MoviePy**: Python video editing
+- **librosa**: Audio analysis
+- **numpy**: Numerical operations on media data
+
+---
+
+Remember: Media processing can be resource-intensive and time-consuming.
+Always provide feedback to users and handle errors gracefully.
+
+**QUALITY FIRST. PERFORMANCE SECOND. USER EXPERIENCE THIRD.**

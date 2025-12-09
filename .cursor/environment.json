@@ -1,0 +1,172 @@
+{
+  "version": "2.0",
+  "description": "Cursor IDE environment configuration for AI Program Video and Music Overlay",
+  "project": {
+    "name": "AI Program Video and Music Overlay",
+    "type": "media-processing",
+    "language": "python",
+    "framework": "custom",
+    "architecture": "media-pipeline"
+  },
+  "variables": {
+    "LOG_LEVEL": "INFO",
+    "PYTHONPATH": "${workspaceFolder}",
+    "NODE_ENV": "development",
+    "MEDIA_OUTPUT_DIR": "${workspaceFolder}/output",
+    "MEDIA_TEMP_DIR": "${workspaceFolder}/temp",
+    "MAX_FILE_SIZE_MB": "2048",
+    "DEFAULT_VIDEO_QUALITY": "high",
+    "DEFAULT_AUDIO_BITRATE": "192"
+  },
+  "rpc": {
+    "tracing": {
+      "enabled": true,
+      "logPath": "${workspaceFolder}/.cursor/logs/rpc",
+      "level": "info",
+      "maxFiles": 10,
+      "maxFileSize": "10MB"
+    }
+  },
+  "indexing": {
+    "enabled": true,
+    "exclude": [
+      "node_modules",
+      "__pycache__",
+      ".git",
+      "*.log",
+      "output/**",
+      "temp/**",
+      "*.mp4",
+      "*.avi",
+      "*.mov",
+      "*.mp3",
+      "*.wav",
+      ".next",
+      "dist",
+      "build",
+      "*.db",
+      "*.csv",
+      "*.json.gz"
+    ],
+    "include": [
+      "**/*.py",
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "**/*.md",
+      "**/*.yml",
+      "**/*.yaml",
+      "**/*.json",
+      "**/*.toml",
+      "**/*.config.*"
+    ]
+  },
+  "ai": {
+    "model": "claude-sonnet-4-20250514",
+    "context": {
+      "maxTokens": 200000,
+      "includeImports": true,
+      "includeReferences": true
+    },
+    "safety": {
+      "requireApprovalForFileDeletion": true,
+      "defaultProcessingMode": "safe",
+      "enforceMemoryLimits": true
+    }
+  },
+  "mcp": {
+    "configPath": "~/.cursor/mcp.json",
+    "servers": {
+      "required": ["filesystem"],
+      "optional": [
+        "github",
+        "memory",
+        "sequential-thinking"
+      ]
+    }
+  },
+  "terminal": {
+    "defaultProfile": "PowerShell",
+    "env": {
+      "PYTHONPATH": "${workspaceFolder}",
+      "LOG_LEVEL": "INFO",
+      "MEDIA_OUTPUT_DIR": "${workspaceFolder}/output"
+    }
+  },
+  "secrets": {
+    "storage": "environment",
+    "note": "Secrets should be stored in .env file, not here",
+    "required": [],
+    "optional": [
+      "API_KEYS",
+      "CLOUD_STORAGE_CREDENTIALS"
+    ]
+  },
+  "mediaProcessing": {
+    "enabled": true,
+    "defaultFormats": {
+      "video": ["mp4", "avi", "mov", "mkv"],
+      "audio": ["mp3", "wav", "aac", "ogg"]
+    },
+    "quality": {
+      "high": {
+        "videoBitrate": "5000k",
+        "audioBitrate": "192k",
+        "resolution": "1080p"
+      },
+      "medium": {
+        "videoBitrate": "2500k",
+        "audioBitrate": "128k",
+        "resolution": "720p"
+      },
+      "low": {
+        "videoBitrate": "1000k",
+        "audioBitrate": "96k",
+        "resolution": "480p"
+      }
+    },
+    "memory": {
+      "maxFileSizeMB": 2048,
+      "chunkSizeMB": 100,
+      "enableStreaming": true
+    }
+  },
+  "commands": {
+    "available": [
+      "/status",
+      "/process",
+      "/preview",
+      "/cleanup"
+    ],
+    "path": "${workspaceFolder}/.cursor/commands"
+  },
+  "cloud": {
+    "enabled": true,
+    "sync": {
+      "workspace": true,
+      "settings": true,
+      "extensions": false,
+      "exclude": [
+        "output/**",
+        "temp/**",
+        "*.mp4",
+        "*.avi",
+        "*.mov",
+        "*.mkv",
+        "*.mp3",
+        "*.wav",
+        "*.aac",
+        "node_modules/**",
+        "__pycache__/**",
+        ".git/**",
+        "*.log"
+      ]
+    },
+    "collaboration": {
+      "enabled": true,
+      "shareWorkspace": true,
+      "shareContext": true
+    }
+  }
+}
