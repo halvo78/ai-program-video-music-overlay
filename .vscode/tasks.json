@@ -115,6 +115,16 @@
       }
     },
     {
+      "label": "📦 Install All (install.ps1)",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-File", "${workspaceFolder}/install.ps1"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
       "label": "📦 Install Python Dependencies",
       "type": "shell",
       "command": "pip",
@@ -144,6 +154,38 @@
         "🎨 Start Next.js Dashboard"
       ],
       "dependsOrder": "parallel",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "🚀 Start All (start.ps1)",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-File", "${workspaceFolder}/start.ps1"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "🔐 Manage Secrets",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-File", "${workspaceFolder}/secrets.ps1", "-Action", "list"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "✅ Verify Secrets",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-File", "${workspaceFolder}/secrets.ps1", "-Action", "verify"],
       "problemMatcher": [],
       "presentation": {
         "reveal": "always"
