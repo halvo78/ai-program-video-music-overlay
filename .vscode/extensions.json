@@ -6,19 +6,19 @@
     "charliermarsh.ruff",
     "ms-python.mypy-type-checker",
     "ms-python.debugpy",
-    
+
     // TypeScript/JavaScript
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "bradlc.vscode-tailwindcss",
-    
+
     // Next.js
     "ms-vscode.vscode-typescript-next",
-    
+
     // Git
     "eamodio.gitlens",
     "mhutchie.git-graph",
-    
+
     // General
     "ms-vscode.vscode-json",
     "redhat.vscode-yaml",
@@ -26,32 +26,32 @@
     "usernamehw.errorlens",
     "gruntfuggly.todo-tree",
     "pkief.material-icon-theme",
-    
+
     // Docker
     "ms-azuretools.vscode-docker",
-    
+
     // Testing
     "ms-playwright.playwright",
-    
+
     // API
     "humao.rest-client",
     "rangav.vscode-thunder-client",
-    
+
     // Database
     "mtxr.sqltools",
     "mtxr.sqltools-driver-pg",
-    
+
     // Environment
     "mikestead.dotenv",
-    
+
     // Code Quality
     "sonarsource.sonarlint-vscode",
-    
+
     // Productivity
     "formulahendry.auto-rename-tag",
     "christian-kohler.path-intellisense",
     "visualstudioexptteam.vscodeintellicode",
-    
+
     // Cursor Specific
     "cursor.cursor-ai"
   ],

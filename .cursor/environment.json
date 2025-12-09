@@ -373,6 +373,13 @@
           "enabled": false,
           "namespace": "cursor-agents",
           "maxAgents": 100
+        },
+        "github-actions": {
+          "enabled": true,
+          "maxAgents": 100,
+          "workflow": ".github/workflows/cloud-agents.yml",
+          "freeMinutes": 2000,
+          "cost": "free"
         }
       },
       "orchestration": {

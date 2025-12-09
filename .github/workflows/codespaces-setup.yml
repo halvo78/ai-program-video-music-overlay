@@ -1,0 +1,43 @@
+name: Codespaces Setup
+
+on:
+  create:
+  workflow_dispatch:
+
+jobs:
+  setup-codespace:
+    name: Setup Codespace Environment
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: dashboard/package-lock.json
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Install Dashboard dependencies
+        working-directory: ./dashboard
+        run: npm ci
+      
+      - name: Verify setup
+        run: |
+          python --version
+          node --version
+          npm --version
+          pytest --version || echo "pytest not installed"

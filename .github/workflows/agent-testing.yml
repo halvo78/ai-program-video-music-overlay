@@ -1,0 +1,85 @@
+name: Agent Testing - Individual Agent Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: 'Agent to test'
+        required: true
+        type: choice
+        options:
+          - video
+          - music
+          - image
+          - voice
+          - content
+          - editing
+          - optimization
+          - analytics
+          - safety
+          - social
+  pull_request:
+    paths:
+      - 'app/agents/**'
+      - 'tests/**'
+
+jobs:
+  test-agent:
+    name: Test ${{ github.event.inputs.agent || 'Agent' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        agent: ${{ github.event.inputs.agent && fromJSON(format('["{0}"]', github.event.inputs.agent)) || fromJSON('["video", "music", "image", "voice", "content", "editing", "optimization", "analytics", "safety", "social"]') }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio
+      
+      - name: Run agent tests
+        env:
+          AGENT_TYPE: ${{ matrix.agent }}
+        run: |
+          pytest tests/test_agents.py::test_${{ matrix.agent }}_agent -v --cov=app.agents.${{ matrix.agent }}_agent --cov-report=term
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: ${{ matrix.agent }}-agent
+          name: codecov-${{ matrix.agent }}
+
+  integration-test:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    needs: test-agent
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run integration tests
+        run: |
+          pytest tests/ -v -k integration
