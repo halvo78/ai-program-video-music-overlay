@@ -1,5 +1,5 @@
-﻿# ═══════════════════════════════════════════════════════════════════════════════
-# GIT IGNORE - AI Program Video and Music Overlay
+# ═══════════════════════════════════════════════════════════════════════════════
+# GIT IGNORE - AI Program Video and Music Overlay (Unified System)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 # Python
@@ -35,13 +35,25 @@ env.bak/
 venv.bak/
 .venv/
 
+# Node.js
+node_modules/
+.npm
+.yarn
+.pnp
+.pnp.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
 # IDE
 # .vscode/ - Keep workspace settings for cloud sync
 .idea/
 *.swp
 *.swo
 *~
-*.sublime-*
+*.sublime-project
+*.sublime-workspace
 .DS_Store
 
 # Cursor (keep config, ignore logs)
@@ -58,10 +70,12 @@ venv.bak/
 output/
 temp/
 tmp/
+generated/
 *.tmp
 *.temp
 *.bak
 *.log
+logs/
 
 # Media files (large)
 *.mp4
@@ -92,15 +106,6 @@ tmp/
 !**/assets/icons/**
 !**/assets/logos/**
 
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-.npm/
-.yarn/
-
 # Build outputs
 dist/
 build/
@@ -117,6 +122,9 @@ htmlcov/
 coverage.xml
 *.cover
 .hypothesis/
+test-results/
+playwright-report/
+coverage/
 
 # Jupyter Notebook
 .ipynb_checkpoints/
@@ -139,6 +147,7 @@ coverage.xml
 Thumbs.db
 desktop.ini
 *.lnk
+Desktop.ini
 
 # Large binary files
 *.zip
@@ -170,6 +179,21 @@ ffmpeg_logs/
 *.parquet
 *.feather
 *.arrow
+
+# Build artifacts
+*.pyc
+*.pyo
+*.pyd
+
+# TypeScript
+*.tsbuildinfo
+
+# Playwright
+playwright-report/
+test-results/
+
+# Credentials (keep structure, ignore actual keys)
+# C:/dev/infra/credentials/connected/*.env
 
 # Keep example files
 !.env.example
