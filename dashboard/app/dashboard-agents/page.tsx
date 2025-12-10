@@ -128,23 +128,37 @@ export default function DashboardAgentsPage() {
   const fetchAgents = async () => {
     try {
       const response = await fetch('http://localhost:8000/api/dashboard/agents');
+      if (!response.ok) {
+        throw new Error('Failed to fetch agents');
+      }
       const data = await response.json();
       
       // Transform API response to Agent format
-      const agentsList: Agent[] = Object.entries(data.agents || {}).map(([id, agent]: [string, any]) => ({
-        id,
-        name: agent.name || id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        category: agent.category || 'Unknown',
-        status: agent.status || 'idle',
-        last_run: null,
-        success_rate: 0,
-        total_runs: 0,
-      }));
+      // API returns: { agents: { agent_id: { id, name, category, status } } }
+      // category is the category key (e.g., "mcp_tool_management")
+      const agentsList: Agent[] = Object.entries(data.agents || {}).map(([id, agent]: [string, any]) => {
+        // Find category name from category key
+        const categoryKey = agent.category || 'unknown';
+        const categoryEntry = Object.entries(AGENT_CATEGORIES).find(([key]) => key === categoryKey);
+        const categoryName = categoryEntry ? categoryEntry[1].name : categoryKey;
+        
+        return {
+          id,
+          name: agent.name || id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+          category: categoryName,
+          status: (agent.status || 'idle') as 'idle' | 'running' | 'completed' | 'error',
+          last_run: undefined,
+          success_rate: 0,
+          total_runs: 0,
+        };
+      });
       
       setAgents(agentsList);
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch agents:', error);
+      // Set empty list on error so UI still renders
+      setAgents([]);
       setLoading(false);
     }
   };
@@ -195,11 +209,16 @@ export default function DashboardAgentsPage() {
     return matchesSearch && matchesCategory;
   });
 
-  // Group agents by category
+  // Group agents by category - match category names from AGENT_CATEGORIES
   const agentsByCategory = filteredAgents.reduce((acc, agent) => {
-    const category = agent.category;
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(agent);
+    // Find matching category key
+    const categoryKey = Object.keys(AGENT_CATEGORIES).find(key => 
+      AGENT_CATEGORIES[key as keyof typeof AGENT_CATEGORIES].name === agent.category
+    ) || Object.keys(AGENT_CATEGORIES)[0];
+    
+    const categoryName = AGENT_CATEGORIES[categoryKey as keyof typeof AGENT_CATEGORIES].name;
+    if (!acc[categoryName]) acc[categoryName] = [];
+    acc[categoryName].push(agent);
     return acc;
   }, {} as Record<string, Agent[]>);
 

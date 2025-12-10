@@ -176,19 +176,20 @@ class InVideoCopyRequest(BaseModel):
 @router.get("/agents")
 async def list_agents() -> Dict[str, Any]:
     """List all 50 dashboard agents organized by category."""
+    agents_dict = {}
+    for category_key, category_info in AGENT_CATEGORIES.items():
+        for agent_id in category_info["agents"]:
+            agents_dict[agent_id] = {
+                "id": agent_id,
+                "name": agent_id.replace("_", " ").title(),
+                "category": category_key,  # Return category key for matching
+                "status": agent_status.get(agent_id, {}).get("status", "idle"),
+            }
+    
     return {
         "total_agents": 50,
         "categories": AGENT_CATEGORIES,
-        "agents": {
-            agent_id: {
-                "id": agent_id,
-                "name": agent_id.replace("_", " ").title(),
-                "category": category,
-                "status": agent_status.get(agent_id, {}).get("status", "idle"),
-            }
-            for category, info in AGENT_CATEGORIES.items()
-            for agent_id in info["agents"]
-        },
+        "agents": agents_dict,
     }
 
 

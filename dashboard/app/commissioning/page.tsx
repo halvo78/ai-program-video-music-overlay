@@ -406,7 +406,7 @@ export default function CommissioningPage() {
                 </div>
                 <div className="flex gap-3">
                   <Button
-                    variant="glass"
+                    variant="secondary"
                     leftIcon={<Download className="w-4 h-4" />}
                   >
                     Export Report

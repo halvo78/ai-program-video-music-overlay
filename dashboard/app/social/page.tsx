@@ -440,7 +440,7 @@ export default function SocialHubPage() {
                   </p>
                 </div>
                 <div className="flex gap-3">
-                  <Button variant="glass" leftIcon={<Calendar className="w-4 h-4" />}>
+                  <Button variant="secondary" leftIcon={<Calendar className="w-4 h-4" />}>
                     Schedule Post
                   </Button>
                   <Button variant="gradient" leftIcon={<Plus className="w-4 h-4" />}>

@@ -390,8 +390,19 @@ const defaultAgents = [
   },
 ]
 
+type AgentStatus = 'idle' | 'running' | 'completed' | 'error'
+type Agent = {
+  type: string
+  name: string
+  status: AgentStatus
+  capabilities: string[]
+  tasksCompleted: number
+  lastRun: string
+  progress?: number
+}
+
 export default function AgentsPage() {
-  const [agents, setAgents] = useState(defaultAgents)
+  const [agents, setAgents] = useState<Agent[]>(defaultAgents)
   const [isLoading, setIsLoading] = useState(false)
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
@@ -401,12 +412,17 @@ export default function AgentsPage() {
     setIsLoading(true)
     try {
       const data = await api.getAgents()
-      setAgents(defaultAgents.map(agent => ({
-        ...agent,
-        status: data[agent.type]?.is_running ? 'running' : 'idle',
-      })))
+      setAgents(defaultAgents.map(agent => {
+        const isRunning = data[agent.type]?.is_running
+        const newStatus: AgentStatus = isRunning ? 'running' : (agent.status === 'completed' ? 'completed' : 'idle')
+        return {
+          ...agent,
+          status: newStatus,
+        } as Agent
+      }))
     } catch (error) {
       console.error('Failed to fetch agents:', error)
+      // On error, keep current agents
     } finally {
       setIsLoading(false)
     }

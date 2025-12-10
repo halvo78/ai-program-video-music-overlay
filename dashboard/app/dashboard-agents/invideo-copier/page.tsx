@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import {
   Sparkles,
@@ -16,7 +16,7 @@ import {
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
-export default function InVideoCopierPage() {
+function InVideoCopierContent() {
   const searchParams = useSearchParams();
   const [analysisId, setAnalysisId] = useState<string | null>(null);
 
@@ -196,5 +196,20 @@ export default function InVideoCopierPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function InVideoCopierPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <RefreshCw className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <InVideoCopierContent />
+    </Suspense>
   );
 }
