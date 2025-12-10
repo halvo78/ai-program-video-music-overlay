@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field
 
 from .config import get_config
 from .workflows.engine import WorkflowEngine, WorkflowMode
+from .api import dashboard
 
 # Configure logging
 logging.basicConfig(
@@ -64,6 +65,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include dashboard API router
+app.include_router(dashboard.router)
 
 
 # Request/Response models

@@ -1,92 +1,79 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+/**
+ * API Client for Taj Chat Backend
+ */
 
-export interface VideoRequest {
-  prompt: string
-  mode: 'sequential' | 'parallel' | 'hybrid'
-  platforms: string[]
-  parameters?: Record<string, any>
-}
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-export interface VideoResponse {
-  workflow_id: string
-  status: string
-  mode: string
-  platforms: string[]
-  execution_time_ms: number
-  output_files: string[]
-  errors: string[]
-}
-
-export interface AgentStatus {
-  agent_type: string
-  name: string
-  priority: string
-  parallel_capable: boolean
-  is_running: boolean
-  current_task: string | null
-  models: string[]
-  capabilities: string[]
-}
-
-export interface SystemStatus {
-  app_name: string
-  version: string
-  agents_registered: string[]
-  ai_providers: Record<string, boolean>
-  social_media: Record<string, boolean>
-}
-
-class ApiClient {
-  private baseUrl: string
-
-  constructor(baseUrl: string = API_BASE) {
-    this.baseUrl = baseUrl
-  }
-
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`
-
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-    })
-
-    if (!response.ok) {
-      const error = await response.text()
-      throw new Error(`API Error: ${response.status} - ${error}`)
+export const api = {
+  /**
+   * Get status of all agents
+   */
+  async getAgents() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/agents`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch agents');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('API Error:', error);
+      return {};
     }
+  },
 
-    return response.json()
-  }
+  /**
+   * Get system status
+   */
+  async getStatus() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/status`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch status');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('API Error:', error);
+      return null;
+    }
+  },
 
-  async getStatus(): Promise<SystemStatus> {
-    return this.request<SystemStatus>('/status')
-  }
+  /**
+   * Create a video
+   */
+  async createVideo(params: { prompt: string; mode?: string; platforms?: string[] }) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: params.prompt,
+          mode: params.mode || 'hybrid',
+          platforms: params.platforms || ['tiktok'],
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to create video');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
+  },
 
-  async getAgents(): Promise<Record<string, AgentStatus>> {
-    return this.request<Record<string, AgentStatus>>('/agents')
-  }
-
-  async createVideo(request: VideoRequest): Promise<VideoResponse> {
-    return this.request<VideoResponse>('/create', {
-      method: 'POST',
-      body: JSON.stringify(request),
-    })
-  }
-
-  async getWorkflow(workflowId: string): Promise<any> {
-    return this.request(`/workflow/${workflowId}`)
-  }
-
-  async healthCheck(): Promise<{ status: string; engine: boolean }> {
-    return this.request('/health')
-  }
-}
-
-export const api = new ApiClient()
+  /**
+   * Get workflow status
+   */
+  async getWorkflow(workflowId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/workflow/${workflowId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch workflow');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('API Error:', error);
+      return null;
+    }
+  },
+};

@@ -55,7 +55,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           className
         )}
         disabled={disabled || isLoading}
-        {...props}
+        {...(props as any)}
       >
         {isLoading ? (
           <Loader2 className="w-4 h-4 animate-spin" />
