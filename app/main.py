@@ -16,6 +16,8 @@ from pydantic import BaseModel, Field
 
 from .config import get_config
 from .workflows.engine import WorkflowEngine, WorkflowMode
+from .monitoring.metrics import metrics
+from .monitoring.performance import performance_monitor
 
 # Configure logging
 logging.basicConfig(
@@ -200,6 +202,48 @@ async def get_configuration():
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy", "engine": workflow_engine is not None}
+
+
+# Monitoring endpoints
+@app.get("/metrics")
+async def get_metrics():
+    """Get all metrics."""
+    return metrics.get_all_metrics()
+
+
+@app.get("/metrics/prometheus")
+async def get_prometheus_metrics():
+    """Get metrics in Prometheus format."""
+    from fastapi.responses import PlainTextResponse
+    return PlainTextResponse(
+        content=metrics.get_prometheus_metrics(),
+        media_type="text/plain",
+    )
+
+
+@app.get("/performance")
+async def get_performance():
+    """Get performance report."""
+    return performance_monitor.get_report()
+
+
+@app.get("/performance/slow")
+async def get_slow_operations(threshold_ms: float = 1000):
+    """Get slow operations."""
+    slow_ops = performance_monitor.get_slow_operations(threshold_ms)
+    return {
+        "threshold_ms": threshold_ms,
+        "count": len(slow_ops),
+        "operations": [
+            {
+                "name": op.name,
+                "duration_ms": op.duration_ms,
+                "timestamp": op.start_time.isoformat(),
+                "success": op.success,
+            }
+            for op in slow_ops[-100:]  # Last 100
+        ],
+    }
 
 
 if __name__ == "__main__":
