@@ -71,7 +71,7 @@ app.add_middleware(
 # Request/Response models
 class VideoRequest(BaseModel):
     """Request to create a video."""
-    prompt: str = Field(..., description="Description of the video to create")
+    prompt: str = Field(..., min_length=1, description="Description of the video to create")
     mode: str = Field("hybrid", description="Workflow mode: sequential, parallel, hybrid")
     platforms: list[str] = Field(
         default=["tiktok"],

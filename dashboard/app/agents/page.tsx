@@ -305,11 +305,21 @@ function StatsCard({ icon: Icon, label, value, change, color, delay }: any) {
   )
 }
 
-const defaultAgents = [
+interface Agent {
+  type: string
+  name: string
+  status: 'idle' | 'running' | 'completed' | 'error'
+  capabilities: string[]
+  tasksCompleted: number
+  lastRun: string
+  progress?: number
+}
+
+const defaultAgents: Agent[] = [
   {
     type: 'content_analysis',
     name: 'Content Analysis Agent',
-    status: 'idle' as const,
+    status: 'idle',
     capabilities: ['Script generation', 'SEO optimization', 'Hashtag suggestions', 'Mood detection'],
     tasksCompleted: 1247,
     lastRun: '2m ago',
@@ -317,7 +327,7 @@ const defaultAgents = [
   {
     type: 'video_generation',
     name: 'Video Generation Agent',
-    status: 'running' as const,
+    status: 'running',
     progress: 67,
     capabilities: ['Text-to-video', 'Image animation', 'Multi-scene composition', 'Style transfer'],
     tasksCompleted: 892,
@@ -326,7 +336,7 @@ const defaultAgents = [
   {
     type: 'music_generation',
     name: 'Music Generation Agent',
-    status: 'idle' as const,
+    status: 'idle',
     capabilities: ['Text-to-music', 'Beat detection', 'Mood matching', 'Duration control'],
     tasksCompleted: 634,
     lastRun: '5m ago',
@@ -334,7 +344,7 @@ const defaultAgents = [
   {
     type: 'image_generation',
     name: 'Image Generation Agent',
-    status: 'completed' as const,
+    status: 'completed',
     capabilities: ['Text-to-image', 'Overlay creation', 'Thumbnail generation', 'Style consistency'],
     tasksCompleted: 2156,
     lastRun: '1m ago',
@@ -342,7 +352,7 @@ const defaultAgents = [
   {
     type: 'voice_speech',
     name: 'Voice & Speech Agent',
-    status: 'idle' as const,
+    status: 'idle',
     capabilities: ['Text-to-speech', 'Voice cloning', 'Auto-captioning', 'Emotion control'],
     tasksCompleted: 445,
     lastRun: '8m ago',
@@ -350,7 +360,7 @@ const defaultAgents = [
   {
     type: 'editing',
     name: 'Editing Agent',
-    status: 'running' as const,
+    status: 'running',
     progress: 34,
     capabilities: ['Video compositing', 'Overlay placement', 'Transitions', 'Color grading'],
     tasksCompleted: 1089,
@@ -359,7 +369,7 @@ const defaultAgents = [
   {
     type: 'optimization',
     name: 'Optimization Agent',
-    status: 'idle' as const,
+    status: 'idle',
     capabilities: ['Platform encoding', 'Aspect ratio conversion', 'File size optimization'],
     tasksCompleted: 3421,
     lastRun: '3m ago',
@@ -367,7 +377,7 @@ const defaultAgents = [
   {
     type: 'analytics',
     name: 'Analytics Agent',
-    status: 'idle' as const,
+    status: 'idle',
     capabilities: ['Performance prediction', 'A/B testing', 'Engagement analysis', 'Trend detection'],
     tasksCompleted: 567,
     lastRun: '12m ago',
@@ -375,7 +385,7 @@ const defaultAgents = [
   {
     type: 'safety',
     name: 'Safety & Compliance Agent',
-    status: 'idle' as const,
+    status: 'idle',
     capabilities: ['Content moderation', 'Copyright detection', 'AI labeling', 'Platform compliance'],
     tasksCompleted: 4532,
     lastRun: '1m ago',
@@ -383,7 +393,7 @@ const defaultAgents = [
   {
     type: 'social_media',
     name: 'Social Media Agent',
-    status: 'idle' as const,
+    status: 'idle',
     capabilities: ['Multi-platform upload', 'Caption optimization', 'Scheduling', 'Analytics sync'],
     tasksCompleted: 789,
     lastRun: '6m ago',
@@ -391,7 +401,7 @@ const defaultAgents = [
 ]
 
 export default function AgentsPage() {
-  const [agents, setAgents] = useState(defaultAgents)
+  const [agents, setAgents] = useState<Agent[]>(defaultAgents)
   const [isLoading, setIsLoading] = useState(false)
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')

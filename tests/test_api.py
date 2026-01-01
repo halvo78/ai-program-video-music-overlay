@@ -95,7 +95,8 @@ class TestAPIValidation:
 
     def test_empty_prompt_rejected(self):
         """Test that empty prompts are rejected."""
-        with pytest.raises(ValueError):
+        from pydantic import ValidationError
+        with pytest.raises(ValidationError):
             VideoRequest(prompt="")
 
 

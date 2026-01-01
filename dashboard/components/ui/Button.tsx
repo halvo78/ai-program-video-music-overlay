@@ -1,16 +1,17 @@
 'use client'
 
 import { forwardRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion, HTMLMotionProps } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'gradient' | 'danger'
+interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
+  variant?: 'primary' | 'secondary' | 'ghost' | 'gradient' | 'danger' | 'glass'
   size?: 'sm' | 'md' | 'lg'
   isLoading?: boolean
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
+  children?: React.ReactNode
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -34,6 +35,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ghost: 'bg-transparent text-white hover:bg-white/5',
       gradient: 'bg-gradient-to-r from-primary via-secondary to-accent bg-[length:200%_200%] animate-gradient text-white shadow-lg',
       danger: 'bg-gradient-to-r from-error to-error-dark text-white shadow-lg shadow-error/25',
+      glass: 'bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/15 hover:border-white/30',
     }
 
     const sizes = {
