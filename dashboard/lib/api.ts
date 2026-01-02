@@ -1,5 +1,24 @@
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
+// API Error types
+export class ApiError extends Error {
+  constructor(
+    public status: number,
+    public statusText: string,
+    message: string
+  ) {
+    super(message)
+    this.name = 'ApiError'
+  }
+}
+
+export class NetworkError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'NetworkError'
+  }
+}
+
 export interface VideoRequest {
   prompt: string
   mode: 'sequential' | 'parallel' | 'hybrid'
@@ -45,24 +64,43 @@ class ApiClient {
 
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    retries: number = 3
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`
 
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-    })
+    for (let attempt = 0; attempt < retries; attempt++) {
+      try {
+        const response = await fetch(url, {
+          ...options,
+          headers: {
+            'Content-Type': 'application/json',
+            ...options.headers,
+          },
+        })
 
-    if (!response.ok) {
-      const error = await response.text()
-      throw new Error(`API Error: ${response.status} - ${error}`)
+        if (!response.ok) {
+          const errorText = await response.text().catch(() => 'Unknown error')
+          throw new ApiError(response.status, response.statusText, errorText)
+        }
+
+        return response.json()
+      } catch (error) {
+        if (error instanceof ApiError) {
+          throw error
+        }
+
+        // Network error - retry with exponential backoff
+        if (attempt < retries - 1) {
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000))
+          continue
+        }
+
+        throw new NetworkError(`Failed to connect to API after ${retries} attempts: ${error}`)
+      }
     }
 
-    return response.json()
+    throw new NetworkError('Request failed after all retries')
   }
 
   async getStatus(): Promise<SystemStatus> {
@@ -86,6 +124,45 @@ class ApiClient {
 
   async healthCheck(): Promise<{ status: string; engine: boolean }> {
     return this.request('/health')
+  }
+
+  // Template methods
+  async getTemplates(): Promise<any[]> {
+    return this.request('/templates')
+  }
+
+  async getTemplate(id: string): Promise<any> {
+    return this.request(`/templates/${id}`)
+  }
+
+  // Gallery methods
+  async getGallery(page: number = 1, limit: number = 20): Promise<any> {
+    return this.request(`/gallery?page=${page}&limit=${limit}`)
+  }
+
+  // Analytics methods
+  async getAnalytics(period: string = '7d'): Promise<any> {
+    return this.request(`/analytics?period=${period}`)
+  }
+
+  // Social media publishing
+  async publishToSocial(videoId: string, platforms: string[]): Promise<any> {
+    return this.request('/publish', {
+      method: 'POST',
+      body: JSON.stringify({ video_id: videoId, platforms }),
+    })
+  }
+
+  // Settings
+  async getSettings(): Promise<any> {
+    return this.request('/settings')
+  }
+
+  async updateSettings(settings: Record<string, any>): Promise<any> {
+    return this.request('/settings', {
+      method: 'PUT',
+      body: JSON.stringify(settings),
+    })
   }
 }
 
