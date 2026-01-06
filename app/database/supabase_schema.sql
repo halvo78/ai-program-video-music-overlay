@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS public.ai_agents (
 CREATE TABLE IF NOT EXISTS public.social_accounts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
-    platform VARCHAR(50) NOT NULL CHECK (platform IN ('tiktok', 'instagram', 'youtube', 'twitter', 'facebook', 'threads')),
+    platform VARCHAR(50) NOT NULL CHECK (platform IN ('tiktok', 'instagram', 'youtube', 'twitter', 'facebook', 'threads', 'telegram')),
     platform_user_id VARCHAR(255),
     username VARCHAR(100),
     display_name VARCHAR(255),

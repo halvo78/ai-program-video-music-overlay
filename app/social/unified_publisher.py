@@ -7,6 +7,7 @@ Single interface to publish content across all platforms:
 - Twitter/X
 - TikTok
 - YouTube
+- Telegram
 
 Handles:
 - Platform-specific formatting
@@ -28,6 +29,7 @@ from .twitter_client import TwitterClient
 from .tiktok_client import TikTokClient
 from .youtube_client import YouTubeClient
 from .instagram_client import InstagramClient
+from .telegram_client import TelegramClient
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +45,7 @@ class Platform(Enum):
     TIKTOK = "tiktok"
     YOUTUBE = "youtube"
     YOUTUBE_SHORTS = "youtube_shorts"
+    TELEGRAM = "telegram"
 
 
 @dataclass
@@ -111,6 +114,7 @@ class UnifiedPublisher:
         Platform.TIKTOK: 2200,
         Platform.YOUTUBE: 5000,
         Platform.YOUTUBE_SHORTS: 100,
+        Platform.TELEGRAM: 1024,
     }
 
     # Platform hashtag limits
@@ -123,6 +127,7 @@ class UnifiedPublisher:
         Platform.TIKTOK: 100,
         Platform.YOUTUBE: 15,
         Platform.YOUTUBE_SHORTS: 15,
+        Platform.TELEGRAM: 20,
     }
 
     def __init__(
@@ -132,12 +137,14 @@ class UnifiedPublisher:
         tiktok_client: TikTokClient = None,
         youtube_client: YouTubeClient = None,
         instagram_client: InstagramClient = None,
+        telegram_client: TelegramClient = None,
     ):
         self.meta = meta_client
         self.twitter = twitter_client
         self.tiktok = tiktok_client
         self.youtube = youtube_client
         self.instagram = instagram_client
+        self.telegram = telegram_client
 
         self._publish_history: List[PublishResult] = []
 
@@ -212,6 +219,8 @@ class UnifiedPublisher:
                 return await self._publish_youtube(formatted)
             elif platform == Platform.YOUTUBE_SHORTS:
                 return await self._publish_youtube_short(formatted)
+            elif platform == Platform.TELEGRAM:
+                return await self._publish_telegram(formatted)
             else:
                 raise ValueError(f"Unknown platform: {platform}")
 
@@ -533,6 +542,36 @@ class UnifiedPublisher:
             success=True,
             post_id=result.get("id"),
             post_url=f"https://youtube.com/shorts/{result.get('id')}",
+            metadata=result,
+        )
+
+    async def _publish_telegram(self, content: Dict) -> PublishResult:
+        """Publish to Telegram Channel"""
+        if not self.telegram:
+            raise ValueError("Telegram client not configured")
+
+        if not content["video_url"]:
+            raise ValueError("Video URL required for Telegram")
+
+        async with self.telegram:
+            # Format caption with HTML
+            caption = self.telegram.format_video_caption(
+                title=content["title"],
+                description=content.get("description", ""),
+                hashtags=content["hashtags"],
+            )
+
+            result = await self.telegram.send_video_from_url(
+                video_url=content["video_url"],
+                caption=caption,
+            )
+
+        message_id = result.get("message_id")
+
+        return PublishResult(
+            platform=Platform.TELEGRAM,
+            success=True,
+            post_id=str(message_id) if message_id else None,
             metadata=result,
         )
 
