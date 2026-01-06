@@ -27,6 +27,7 @@ import {
   ChevronDown,
   Bot,
   Loader2,
+  Share2,
 } from 'lucide-react';
 
 // Platform options

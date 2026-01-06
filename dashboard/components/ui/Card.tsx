@@ -1,7 +1,6 @@
 'use client'
 
 import { forwardRef } from 'react'
-import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -28,20 +27,19 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     }
 
     return (
-      <motion.div
+      <div
         ref={ref}
-        whileHover={hover ? { y: -4, scale: 1.01 } : undefined}
         className={cn(
           'rounded-2xl p-6 transition-all duration-300',
           variants[variant],
-          hover && 'cursor-pointer',
+          hover && 'cursor-pointer hover:-translate-y-1 hover:scale-[1.01]',
           glowStyles[glow],
           className
         )}
         {...props}
       >
         {children}
-      </motion.div>
+      </div>
     )
   }
 )
