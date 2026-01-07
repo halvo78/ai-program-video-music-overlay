@@ -1,21 +1,71 @@
 """
 Taj Chat Configuration
 
-Loads credentials from C:/dev/infra/credentials/connected/
+Supports loading credentials from:
+1. AWS Secrets Manager (production)
+2. Environment variables
+3. Local .env files (development)
 """
 
 import os
+import json
+import logging
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Optional
 from dotenv import load_dotenv
 
-# Load credentials from dev infrastructure
-CREDENTIALS_PATH = Path("C:/dev/infra/credentials/connected")
+logger = logging.getLogger(__name__)
 
-# Load all env files
-for env_file in CREDENTIALS_PATH.glob("*.env"):
-    load_dotenv(env_file)
+# Try to load from AWS Secrets Manager first
+def load_aws_secrets():
+    """Load secrets from AWS Secrets Manager."""
+    try:
+        import boto3
+        from botocore.exceptions import ClientError
+
+        # Get secret names from environment or use defaults
+        secret_names = os.getenv("AWS_SECRET_NAMES", "taj-chat/api-keys,taj-chat/social-keys").split(",")
+        region = os.getenv("AWS_REGION", "us-east-1")
+
+        client = boto3.client("secretsmanager", region_name=region)
+
+        for secret_name in secret_names:
+            try:
+                response = client.get_secret_value(SecretId=secret_name.strip())
+                secret_data = json.loads(response["SecretString"])
+
+                # Load all keys into environment
+                for key, value in secret_data.items():
+                    if value:
+                        os.environ[key] = str(value)
+
+                logger.info(f"✅ Loaded secrets from AWS: {secret_name}")
+
+            except ClientError as e:
+                if e.response["Error"]["Code"] == "ResourceNotFoundException":
+                    logger.warning(f"Secret not found: {secret_name}")
+                else:
+                    logger.error(f"AWS Secrets error: {e}")
+
+    except ImportError:
+        logger.info("boto3 not installed - skipping AWS Secrets Manager")
+    except Exception as e:
+        logger.warning(f"Could not load AWS secrets: {e}")
+
+
+# Try AWS Secrets first
+load_aws_secrets()
+
+# Then load from local .env files as fallback
+CREDENTIALS_PATH = Path(os.getenv("CREDENTIALS_PATH", "C:/dev/infra/credentials/connected"))
+if CREDENTIALS_PATH.exists():
+    for env_file in CREDENTIALS_PATH.glob("*.env"):
+        load_dotenv(env_file)
+        logger.info(f"Loaded: {env_file.name}")
+
+# Also load from current directory .env
+load_dotenv()
 
 
 @dataclass
@@ -59,6 +109,30 @@ class AIProviders:
 
     # DeepSeek
     deepseek_api_key: str = field(default_factory=lambda: os.getenv("DEEPSEEK_API_KEY", ""))
+
+    # ElevenLabs (Voice Cloning)
+    elevenlabs_api_key: str = field(default_factory=lambda: os.getenv("ELEVENLABS_API_KEY", ""))
+
+    # HeyGen (AI Avatars)
+    heygen_api_key: str = field(default_factory=lambda: os.getenv("HEYGEN_API_KEY", ""))
+
+    # D-ID (AI Avatars - backup)
+    did_api_key: str = field(default_factory=lambda: os.getenv("DID_API_KEY", ""))
+
+    # Synthesia (AI Avatars - enterprise)
+    synthesia_api_key: str = field(default_factory=lambda: os.getenv("SYNTHESIA_API_KEY", ""))
+
+    # AssemblyAI (Transcription)
+    assembly_ai_key: str = field(default_factory=lambda: os.getenv("ASSEMBLYAI_API_KEY", ""))
+
+    # Deepgram (Transcription)
+    deepgram_api_key: str = field(default_factory=lambda: os.getenv("DEEPGRAM_API_KEY", ""))
+
+    # Pexels (Stock Video B-Roll)
+    pexels_api_key: str = field(default_factory=lambda: os.getenv("PEXELS_API_KEY", ""))
+
+    # Pixabay (Stock Video B-Roll)
+    pixabay_api_key: str = field(default_factory=lambda: os.getenv("PIXABAY_API_KEY", ""))
 
 
 @dataclass
@@ -135,9 +209,14 @@ class AppSettings:
     debug: bool = field(default_factory=lambda: os.getenv("DEBUG", "false").lower() == "true")
     log_level: str = field(default_factory=lambda: os.getenv("LOG_LEVEL", "INFO"))
 
-    # Storage paths
-    storage_path: Path = field(default_factory=lambda: Path("C:/dev/taj-chat/generated"))
-    temp_path: Path = field(default_factory=lambda: Path("C:/dev/taj-chat/temp"))
+    # Storage paths (use environment variables for cloud deployment)
+    storage_path: Path = field(default_factory=lambda: Path(os.getenv("STORAGE_PATH", "/tmp/taj-chat/generated")))
+    temp_path: Path = field(default_factory=lambda: Path(os.getenv("TEMP_PATH", "/tmp/taj-chat/temp")))
+
+    # S3/Cloud Storage (production)
+    s3_bucket: str = field(default_factory=lambda: os.getenv("S3_BUCKET", ""))
+    s3_region: str = field(default_factory=lambda: os.getenv("AWS_REGION", "us-east-1"))
+    cloudfront_domain: str = field(default_factory=lambda: os.getenv("CLOUDFRONT_DOMAIN", ""))
 
     # Video settings
     default_video_format: str = "mp4"
@@ -173,6 +252,18 @@ class Config:
                 "together": bool(self.ai.together_api_key),
                 "huggingface": bool(self.ai.hf_token),
                 "flux": bool(self.ai.flux_api_key),
+                "cohere": bool(self.ai.cohere_api_key),
+                "deepseek": bool(self.ai.deepseek_api_key),
+            },
+            "competitor_features": {
+                "elevenlabs": bool(self.ai.elevenlabs_api_key),  # Voice Cloning
+                "heygen": bool(self.ai.heygen_api_key),          # AI Avatars
+                "did": bool(self.ai.did_api_key),                # AI Avatars (backup)
+                "synthesia": bool(self.ai.synthesia_api_key),    # AI Avatars (enterprise)
+                "assemblyai": bool(self.ai.assembly_ai_key),     # Transcription
+                "deepgram": bool(self.ai.deepgram_api_key),      # Transcription
+                "pexels": bool(self.ai.pexels_api_key),          # Stock B-Roll
+                "pixabay": bool(self.ai.pixabay_api_key),        # Stock B-Roll
             },
             "social_media": {
                 "twitter": bool(self.social.twitter_bearer_token),
