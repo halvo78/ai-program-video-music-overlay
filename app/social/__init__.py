@@ -28,6 +28,8 @@ from .tiktok_client import TikTokClient
 from .youtube_client import YouTubeClient
 from .instagram_client import InstagramClient
 from .telegram_client import TelegramClient
+from .facebook_client import FacebookClient
+from .threads_client import ThreadsClient
 from .unified_publisher import UnifiedPublisher
 from .analytics_aggregator import AnalyticsAggregator
 
@@ -38,6 +40,8 @@ __all__ = [
     'YouTubeClient',
     'InstagramClient',
     'TelegramClient',
+    'FacebookClient',
+    'ThreadsClient',
     'UnifiedPublisher',
     'AnalyticsAggregator',
 ]

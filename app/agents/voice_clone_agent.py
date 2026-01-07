@@ -27,6 +27,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 import io
 
+from .base_agent import BaseAgent, AgentType, AgentPriority, AgentTask, AgentResult
+
 logger = logging.getLogger(__name__)
 
 
@@ -123,7 +125,7 @@ class SpeechResult:
     cost_usd: float = 0.0
 
 
-class VoiceCloneAgent:
+class VoiceCloneAgent(BaseAgent):
     """
     AI Agent for voice cloning and text-to-speech.
 
@@ -143,6 +145,11 @@ class VoiceCloneAgent:
         google_credentials: str = None,
         azure_key: str = None
     ):
+        super().__init__(
+            agent_type=AgentType.VOICE_CLONE,
+            priority=AgentPriority.HIGH,
+            parallel_capable=True
+        )
         self.elevenlabs_key = elevenlabs_api_key
         self.openai_key = openai_api_key
         self.google_creds = google_credentials
@@ -154,6 +161,59 @@ class VoiceCloneAgent:
 
         # Initialize default voice library
         self._init_default_voices()
+
+    @property
+    def name(self) -> str:
+        return "Voice Clone Agent"
+
+    @property
+    def models(self) -> list[str]:
+        return ["elevenlabs", "openai-tts", "google-tts", "azure-tts"]
+
+    @property
+    def capabilities(self) -> list[str]:
+        return [
+            "voice_cloning",
+            "text_to_speech",
+            "voice_library",
+            "emotion_control",
+            "multi_language",
+            "lip_sync_generation",
+        ]
+
+    async def execute(self, task: AgentTask) -> AgentResult:
+        """Execute voice cloning task."""
+        try:
+            task_type = task.parameters.get("type", "tts")
+            if task_type == "clone":
+                result = await self.clone_voice(
+                    audio_samples=task.parameters.get("audio_samples", []),
+                    name=task.parameters.get("name", "Custom Voice"),
+                )
+                return AgentResult(
+                    agent_type=self.agent_type,
+                    task_id=task.task_id,
+                    status="success",
+                    output={"voice_id": result.voice_id, "quality_score": result.quality_score}
+                )
+            else:
+                result = await self.text_to_speech(
+                    text=task.parameters.get("text", ""),
+                    voice_id=task.parameters.get("voice_id"),
+                )
+                return AgentResult(
+                    agent_type=self.agent_type,
+                    task_id=task.task_id,
+                    status="success",
+                    output={"duration_seconds": result.duration_seconds, "format": result.format}
+                )
+        except Exception as e:
+            return AgentResult(
+                agent_type=self.agent_type,
+                task_id=task.task_id,
+                status="error",
+                error=str(e)
+            )
 
     def _init_default_voices(self):
         """Initialize default voice library"""

@@ -26,6 +26,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from .base_agent import BaseAgent, AgentType, AgentPriority, AgentTask, AgentResult
+
 logger = logging.getLogger(__name__)
 
 
@@ -108,7 +110,7 @@ class BRollPlan:
     created_at: datetime = field(default_factory=datetime.utcnow)
 
 
-class AIBRollAgent:
+class AIBRollAgent(BaseAgent):
     """
     AI Agent for automatic B-roll insertion.
 
@@ -123,6 +125,11 @@ class AIBRollAgent:
         storyblocks_key: str = None,
         pixabay_key: str = None
     ):
+        super().__init__(
+            agent_type=AgentType.AI_BROLL,
+            priority=AgentPriority.MEDIUM,
+            parallel_capable=True
+        )
         self.openai_key = openai_key
         self.pexels_key = pexels_key
         self.storyblocks_key = storyblocks_key
@@ -130,6 +137,46 @@ class AIBRollAgent:
 
         # Cache for stock footage searches
         self.search_cache: Dict[str, List[BRollClip]] = {}
+
+    @property
+    def name(self) -> str:
+        return "AI B-Roll Agent"
+
+    @property
+    def models(self) -> list[str]:
+        return ["gpt-4o", "pexels", "pixabay", "storyblocks"]
+
+    @property
+    def capabilities(self) -> list[str]:
+        return [
+            "content_analysis",
+            "broll_matching",
+            "auto_insertion",
+            "stock_library_integration",
+            "ai_image_generation",
+            "keyword_extraction",
+        ]
+
+    async def execute(self, task: AgentTask) -> AgentResult:
+        """Execute B-roll insertion task."""
+        try:
+            result = await self.analyze_and_suggest(
+                video_path=task.parameters.get("video_path"),
+                script=task.parameters.get("script"),
+            )
+            return AgentResult(
+                agent_type=self.agent_type,
+                task_id=task.task_id,
+                status="success",
+                output={"plan_id": result.plan_id, "suggestions_count": len(result.suggestions)}
+            )
+        except Exception as e:
+            return AgentResult(
+                agent_type=self.agent_type,
+                task_id=task.task_id,
+                status="error",
+                error=str(e)
+            )
 
     async def analyze_and_suggest(
         self,

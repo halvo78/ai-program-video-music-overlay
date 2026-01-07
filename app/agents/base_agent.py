@@ -38,6 +38,13 @@ class AgentType(Enum):
     # Coordinator
     ORCHESTRATOR = "orchestrator"
 
+    # Competitor-Parity Agents (5)
+    VIRALITY = "virality"
+    VOICE_CLONE = "voice_clone"
+    AI_AVATAR = "ai_avatar"
+    TEXT_EDITING = "text_editing"
+    AI_BROLL = "ai_broll"
+
 
 class AgentPriority(Enum):
     """Agent execution priority."""

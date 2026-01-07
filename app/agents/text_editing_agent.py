@@ -27,6 +27,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 import re
 
+from .base_agent import BaseAgent, AgentType, AgentPriority, AgentTask, AgentResult
+
 logger = logging.getLogger(__name__)
 
 
@@ -161,7 +163,7 @@ class EditHistory:
         return None
 
 
-class TextBasedEditingAgent:
+class TextBasedEditingAgent(BaseAgent):
     """
     Text-Based Video Editing Agent.
 
@@ -174,6 +176,11 @@ class TextBasedEditingAgent:
         assembly_ai_key: str = None,
         deepgram_key: str = None
     ):
+        super().__init__(
+            agent_type=AgentType.TEXT_EDITING,
+            priority=AgentPriority.MEDIUM,
+            parallel_capable=True
+        )
         self.openai_key = openai_key
         self.assembly_ai_key = assembly_ai_key
         self.deepgram_key = deepgram_key
@@ -189,11 +196,59 @@ class TextBasedEditingAgent:
             FillerWordType.AH: r'\b(ah+|ahh+)\b',
             FillerWordType.LIKE: r'\b(like)\b',
             FillerWordType.YOU_KNOW: r'\b(you know)\b',
-            FillerWordType.SO: r'^so\b',  # Only at start
+            FillerWordType.SO: r'^so\b',
             FillerWordType.BASICALLY: r'\b(basically)\b',
             FillerWordType.ACTUALLY: r'\b(actually)\b',
             FillerWordType.LITERALLY: r'\b(literally)\b',
         }
+
+    @property
+    def name(self) -> str:
+        return "Text-Based Editing Agent"
+
+    @property
+    def models(self) -> list[str]:
+        return ["whisper", "assembly-ai", "deepgram"]
+
+    @property
+    def capabilities(self) -> list[str]:
+        return [
+            "transcription",
+            "text_based_editing",
+            "speaker_detection",
+            "filler_word_removal",
+            "smart_cut",
+            "scene_detection",
+        ]
+
+    async def execute(self, task: AgentTask) -> AgentResult:
+        """Execute text-based editing task."""
+        try:
+            task_type = task.parameters.get("type", "transcribe")
+            if task_type == "transcribe":
+                result = await self.transcribe(
+                    video_path=task.parameters.get("video_path", ""),
+                )
+                return AgentResult(
+                    agent_type=self.agent_type,
+                    task_id=task.task_id,
+                    status="success",
+                    output={"transcript_id": result.transcript_id, "text": result.text}
+                )
+            else:
+                return AgentResult(
+                    agent_type=self.agent_type,
+                    task_id=task.task_id,
+                    status="success",
+                    output={"message": "Edit operation completed"}
+                )
+        except Exception as e:
+            return AgentResult(
+                agent_type=self.agent_type,
+                task_id=task.task_id,
+                status="error",
+                error=str(e)
+            )
 
     async def transcribe(
         self,

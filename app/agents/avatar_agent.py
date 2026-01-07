@@ -26,6 +26,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from .base_agent import BaseAgent, AgentType, AgentPriority, AgentTask, AgentResult
+
 logger = logging.getLogger(__name__)
 
 
@@ -164,7 +166,7 @@ class AvatarVideoResult:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 
-class AIAvatarAgent:
+class AIAvatarAgent(BaseAgent):
     """
     AI Agent for creating avatar videos.
 
@@ -181,6 +183,11 @@ class AIAvatarAgent:
         synthesia_api_key: str = None,
         did_api_key: str = None
     ):
+        super().__init__(
+            agent_type=AgentType.AI_AVATAR,
+            priority=AgentPriority.HIGH,
+            parallel_capable=True
+        )
         self.heygen_key = heygen_api_key
         self.synthesia_key = synthesia_api_key
         self.did_key = did_api_key
@@ -188,11 +195,50 @@ class AIAvatarAgent:
         # Avatar library
         self.avatar_library: Dict[str, AvatarProfile] = {}
         self.custom_avatars: Dict[str, AvatarProfile] = {}
-        self.backgrounds: Dict[str, BackgroundOption] = {}
 
-        # Initialize default avatars
+        # Initialize default avatar library
         self._init_default_avatars()
-        self._init_default_backgrounds()
+
+    @property
+    def name(self) -> str:
+        return "AI Avatar Agent"
+
+    @property
+    def models(self) -> list[str]:
+        return ["heygen", "synthesia", "d-id", "sadtalker"]
+
+    @property
+    def capabilities(self) -> list[str]:
+        return [
+            "avatar_video_generation",
+            "custom_avatar_creation",
+            "multi_language_support",
+            "expression_control",
+            "gesture_library",
+            "lip_sync",
+        ]
+
+    async def execute(self, task: AgentTask) -> AgentResult:
+        """Execute avatar video generation task."""
+        try:
+            result = await self.generate_avatar_video(
+                script=task.parameters.get("script", ""),
+                avatar_id=task.parameters.get("avatar_id"),
+                settings=task.parameters.get("settings"),
+            )
+            return AgentResult(
+                agent_type=self.agent_type,
+                task_id=task.task_id,
+                status="success",
+                output=result
+            )
+        except Exception as e:
+            return AgentResult(
+                agent_type=self.agent_type,
+                task_id=task.task_id,
+                status="error",
+                error=str(e)
+            )
 
     def _init_default_avatars(self):
         """Initialize default avatar library"""

@@ -25,6 +25,8 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
+from .base_agent import BaseAgent, AgentType, AgentPriority, AgentTask, AgentResult
+
 logger = logging.getLogger(__name__)
 
 
@@ -123,7 +125,7 @@ class ViralityReport:
     model_version: str = "1.0.0"
 
 
-class ViralityAgent:
+class ViralityAgent(BaseAgent):
     """
     AI Agent for predicting viral potential of video content.
 
@@ -140,6 +142,11 @@ class ViralityAgent:
         anthropic_client=None,
         historical_data_path: str = None
     ):
+        super().__init__(
+            agent_type=AgentType.VIRALITY,
+            priority=AgentPriority.MEDIUM,
+            parallel_capable=True
+        )
         self.openai = openai_client
         self.anthropic = anthropic_client
         self.historical_data_path = historical_data_path
@@ -176,6 +183,50 @@ class ViralityAgent:
         # Trending topics cache
         self.trending_topics: Dict[Platform, List[str]] = {}
 
+    @property
+    def name(self) -> str:
+        return "Virality Prediction Agent"
+
+    @property
+    def models(self) -> list[str]:
+        return ["gpt-4o", "claude-3-5-sonnet-20241022"]
+
+    @property
+    def capabilities(self) -> list[str]:
+        return [
+            "virality_scoring",
+            "hook_analysis",
+            "engagement_prediction",
+            "platform_optimization",
+            "hashtag_recommendations",
+            "caption_optimization",
+        ]
+
+    async def execute(self, task: AgentTask) -> AgentResult:
+        """Execute virality analysis task."""
+        try:
+            report = await self.analyze(
+                script=task.parameters.get("script"),
+                title=task.parameters.get("title"),
+                description=task.parameters.get("description"),
+                duration_seconds=task.parameters.get("duration_seconds"),
+                target_platforms=[Platform(p) for p in task.parameters.get("platforms", ["tiktok"])],
+            )
+            return AgentResult(
+                agent_type=self.agent_type,
+                task_id=task.task_id,
+                status="success",
+                output={"virality_score": report.overall_score, "report": report.__dict__},
+                metadata={"confidence": report.confidence}
+            )
+        except Exception as e:
+            return AgentResult(
+                agent_type=self.agent_type,
+                task_id=task.task_id,
+                status="error",
+                error=str(e)
+            )
+
     async def analyze(
         self,
         video_path: str = None,
@@ -189,19 +240,6 @@ class ViralityAgent:
     ) -> ViralityReport:
         """
         Analyze content and generate virality prediction.
-
-        Args:
-            video_path: Path to video file
-            script: Video script/transcript
-            title: Video title
-            description: Video description
-            duration_seconds: Video duration
-            target_platforms: Platforms to analyze for
-            category: Content category
-            music_info: Music/audio information
-
-        Returns:
-            ViralityReport with complete analysis
         """
         target_platforms = target_platforms or [Platform.TIKTOK, Platform.INSTAGRAM]
 
@@ -251,6 +289,43 @@ class ViralityAgent:
         )
 
         return report
+
+    def _calculate_confidence(self, platform_scores: Dict) -> float:
+        """Calculate confidence based on platform scores."""
+        if not platform_scores:
+            return 0.5
+        scores = [ps.score for ps in platform_scores.values()]
+        variance = sum((s - sum(scores)/len(scores))**2 for s in scores) / len(scores)
+        return max(0.3, 1.0 - (variance / 1000))
+
+    async def _calculate_platform_score(
+        self,
+        platform: Platform,
+        hook_analysis: HookAnalysis,
+        content_analysis: Dict,
+        engagement: EngagementPrediction,
+        trending: Dict
+    ) -> PlatformScore:
+        """Calculate platform-specific virality score."""
+        weights = self.platform_weights.get(platform, {"hook_weight": 0.25, "trend_weight": 0.25, "content_weight": 0.25, "engagement_weight": 0.25})
+
+        # Calculate weighted score
+        hook_score = hook_analysis.hook_strength * weights.get("hook_weight", 0.25)
+        trend_score = trending.get("alignment_score", 50) * weights.get("trend_weight", 0.25)
+        content_score = content_analysis.get("emotional_impact", 50) * weights.get("content_weight", 0.25)
+        engagement_score = engagement.watch_time_percentage * weights.get("engagement_weight", 0.25)
+
+        total_score = hook_score + trend_score + content_score + engagement_score
+
+        return PlatformScore(
+            platform=platform,
+            score=min(100, max(0, total_score)),
+            strengths=["Good hook" if hook_score > 20 else "", "Trending alignment" if trend_score > 20 else ""],
+            weaknesses=[],
+            optimizations=["Improve opening hook", "Add trending hashtags"],
+            best_posting_times=["6-9 AM", "7-9 PM"],
+            hashtag_recommendations=["#viral", "#foryou", "#trending"]
+        )
 
     async def _analyze_hook(
         self,
