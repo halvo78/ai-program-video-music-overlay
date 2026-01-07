@@ -10,6 +10,7 @@ from typing import Optional
 
 from ..agents.orchestrator import Orchestrator, WorkflowMode, WorkflowResult
 from ..agents import (
+    # Core Agents (10)
     VideoGenerationAgent,
     MusicGenerationAgent,
     ImageGenerationAgent,
@@ -20,6 +21,12 @@ from ..agents import (
     AnalyticsAgent,
     SafetyComplianceAgent,
     SocialMediaAgent,
+    # Competitor-Parity Agents (5)
+    ViralityAgent,
+    VoiceCloneAgent,
+    AIAvatarAgent,
+    TextBasedEditingAgent,
+    AIBRollAgent,
 )
 
 logger = logging.getLogger(__name__)
@@ -44,8 +51,9 @@ class WorkflowEngine:
         # Create orchestrator
         self.orchestrator = Orchestrator()
 
-        # Initialize and register all 10 agents
-        agents = [
+        # Initialize and register all 15 specialist agents
+        core_agents = [
+            # Core Production Agents (10)
             VideoGenerationAgent(),
             MusicGenerationAgent(),
             ImageGenerationAgent(),
@@ -58,10 +66,21 @@ class WorkflowEngine:
             SocialMediaAgent(),
         ]
 
-        for agent in agents:
+        # Competitor-Parity Agents (5) - Added to match/beat competition
+        competitor_agents = [
+            ViralityAgent(),      # Opus Clip - Viral score prediction
+            VoiceCloneAgent(),    # ElevenLabs/Descript - Voice cloning
+            AIAvatarAgent(),      # Synthesia/HeyGen - AI avatars
+            TextBasedEditingAgent(),  # Descript - Edit video via transcript
+            AIBRollAgent(),       # Kapwing/Opus - Auto B-roll insertion
+        ]
+
+        all_agents = core_agents + competitor_agents
+
+        for agent in all_agents:
             self.orchestrator.register_agent(agent)
 
-        logger.info(f"Registered {len(agents)} specialist agents")
+        logger.info(f"Registered {len(all_agents)} specialist agents (10 core + 5 competitor-parity)")
 
     async def create_video(
         self,
